@@ -194,7 +194,9 @@ const DataStore = {
         );
 
     },
-        getProductionRecord(
+
+
+    getProductionRecord(
         panelId,
         stageId
     ) {
@@ -232,7 +234,9 @@ const DataStore = {
             record => record.stageId === stageId
         );
 
-    }
+    },
+
+
     generateProductionRecords(
         projectId,
         setId,
@@ -305,4 +309,5 @@ const DataStore = {
         );
 
     }
+
 };
