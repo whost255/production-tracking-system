@@ -1,18 +1,18 @@
 const App = {
 
-  init() {
+    init() {
 
-    this.setupNavigation();
+        this.setupNavigation();
 
-    this.setupMobileMenu();
+        this.setupMobileMenu();
 
-    this.hideLoader();
+        this.hideLoader();
 
-    console.log(
-        "Production Tracking System initialized."
-    );
+        console.log(
+            "Production Tracking System initialized."
+        );
 
-},
+    },
 
 
     setupNavigation() {
@@ -33,7 +33,9 @@ const App = {
 
 
                 navItems.forEach(nav => {
+
                     nav.classList.remove("active");
+
                 });
 
 
@@ -41,7 +43,9 @@ const App = {
 
 
                 pages.forEach(page => {
+
                     page.classList.remove("active");
+
                 });
 
 
@@ -79,7 +83,9 @@ const App = {
 
 
         if (!menuButton || !sidebar) {
+
             return;
+
         }
 
 
@@ -116,6 +122,32 @@ const App = {
 
         });
 
+    },
+
+
+    hideLoader() {
+
+        const loader =
+            document.getElementById(
+                "appLoader"
+            );
+
+
+        if (!loader) {
+
+            return;
+
+        }
+
+
+        setTimeout(() => {
+
+            loader.classList.add(
+                "hidden"
+            );
+
+        }, 300);
+
     }
 
 };
@@ -129,19 +161,3 @@ document.addEventListener(
 
     }
 );
-hideLoader() {
-
-    const loader =
-        document.getElementById("appLoader");
-
-    if (!loader) {
-        return;
-    }
-
-    setTimeout(() => {
-
-        loader.classList.add("hidden");
-
-    }, 300);
-
-},
