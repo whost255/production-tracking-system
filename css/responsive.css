@@ -1,8 +1,145 @@
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 210px;
+    }
+
+    .main-content {
+        padding: 22px;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
 @media (max-width: 768px) {
 
-    h1 {
-        font-size: 24px;
-        margin: 20px;
+    .app-header {
+        height: 60px;
+
+        padding: 0 16px;
+    }
+
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+
+    .app-logo {
+        width: 34px;
+        height: 34px;
+    }
+
+
+    .app-title h1 {
+        font-size: 16px;
+    }
+
+
+    .app-title span {
+        display: none;
+    }
+
+
+    .header-status {
+        display: none;
+    }
+
+
+    .app-body {
+        min-height: calc(100vh - 60px);
+    }
+
+
+    .sidebar {
+        position: fixed;
+
+        top: 60px;
+        left: 0;
+        bottom: 0;
+
+        width: 250px;
+
+        z-index: 900;
+
+        transform: translateX(-100%);
+
+        transition: transform 0.25s ease;
+
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.08);
+    }
+
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+
+    .main-content {
+        width: 100%;
+
+        padding: 18px 14px;
+    }
+
+
+    .page-header {
+        margin-bottom: 18px;
+    }
+
+
+    .page-header h2 {
+        font-size: 21px;
+    }
+
+
+    .page-header p {
+        font-size: 13px;
+    }
+
+
+    .page-placeholder {
+        padding: 30px 20px;
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+    .app-header {
+        padding: 0 12px;
+    }
+
+
+    .header-left {
+        gap: 8px;
+    }
+
+
+    .app-title h1 {
+        font-size: 15px;
+    }
+
+
+    .main-content {
+        padding: 15px 10px;
+    }
+
+
+    .page-header h2 {
+        font-size: 19px;
     }
 
 }
