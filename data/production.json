@@ -1,3 +1,15 @@
 {
-    "production": []
+    "production": [
+        {
+            "id": "PROD-001",
+            "projectId": "PRJ-001",
+            "setId": "SET-001",
+            "panelId": "PNL-001",
+            "stageId": "STG-001",
+            "status": "Pending",
+            "remarks": "",
+            "updatedAt": "",
+            "updatedBy": "System"
+        }
+    ]
 }
