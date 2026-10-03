@@ -1,3 +1,16 @@
 {
-    "history": []
+    "history": [
+        {
+            "id": "HIS-001",
+            "projectId": "PRJ-001",
+            "setId": "SET-001",
+            "panelId": "PNL-001",
+            "stageId": "STG-001",
+            "previousStatus": "",
+            "newStatus": "Pending",
+            "remarks": "Initial production record",
+            "changedAt": "",
+            "changedBy": "System"
+        }
+    ]
 }
