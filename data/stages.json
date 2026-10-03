@@ -1,3 +1,40 @@
 {
-    "stages": []
+    "stages": [
+        {
+            "id": "STG-001",
+            "name": "Lamination",
+            "sequence": 1,
+            "active": true
+        },
+        {
+            "id": "STG-002",
+            "name": "Demould",
+            "sequence": 2,
+            "active": true
+        },
+        {
+            "id": "STG-003",
+            "name": "Trimming",
+            "sequence": 3,
+            "active": true
+        },
+        {
+            "id": "STG-004",
+            "name": "Detailing",
+            "sequence": 4,
+            "active": true
+        },
+        {
+            "id": "STG-005",
+            "name": "Painting",
+            "sequence": 5,
+            "active": true
+        },
+        {
+            "id": "STG-006",
+            "name": "Packing",
+            "sequence": 6,
+            "active": true
+        }
+    ]
 }
