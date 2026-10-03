@@ -1,3 +1,17 @@
 {
-    "panels": []
+    "panels": [
+        {
+            "id": "PNL-001",
+            "projectId": "PRJ-001",
+            "setId": "SET-001",
+            "panelCode": "PNL-001",
+            "panelName": "Sample Panel",
+            "panelType": "Main Body",
+            "sequence": 1,
+            "quantity": 1,
+            "active": true,
+            "createdAt": "",
+            "updatedAt": ""
+        }
+    ]
 }
