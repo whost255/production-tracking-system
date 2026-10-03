@@ -4,37 +4,93 @@
             "id": "STG-001",
             "name": "Lamination",
             "sequence": 1,
-            "active": true
+            "active": true,
+            "statuses": [
+                "Pending",
+                "WIP",
+                "Completed",
+                "Quality Offer",
+                "Quality Approved",
+                "Quality Rejected",
+                "Rework",
+                "Hold"
+            ]
         },
         {
             "id": "STG-002",
             "name": "Demould",
             "sequence": 2,
-            "active": true
+            "active": true,
+            "statuses": [
+                "Pending",
+                "WIP",
+                "Completed",
+                "Quality Offer",
+                "Quality Approved",
+                "Quality Rejected",
+                "Rework",
+                "Hold"
+            ]
         },
         {
             "id": "STG-003",
             "name": "Trimming",
             "sequence": 3,
-            "active": true
+            "active": true,
+            "statuses": [
+                "Pending",
+                "WIP",
+                "Completed",
+                "Quality Offer",
+                "Quality Approved",
+                "Quality Rejected",
+                "Rework",
+                "Hold"
+            ]
         },
         {
             "id": "STG-004",
             "name": "Detailing",
             "sequence": 4,
-            "active": true
+            "active": true,
+            "statuses": [
+                "Pending",
+                "WIP",
+                "Completed",
+                "Quality Offer",
+                "Quality Approved",
+                "Quality Rejected",
+                "Rework",
+                "Hold"
+            ]
         },
         {
             "id": "STG-005",
             "name": "Painting",
             "sequence": 5,
-            "active": true
+            "active": true,
+            "statuses": [
+                "Pending",
+                "Primer",
+                "Primer QC",
+                "Painting",
+                "Paint QC",
+                "Completed",
+                "Rework",
+                "Hold"
+            ]
         },
         {
             "id": "STG-006",
             "name": "Packing",
             "sequence": 6,
-            "active": true
+            "active": true,
+            "statuses": [
+                "Pending",
+                "WIP",
+                "Completed",
+                "Hold"
+            ]
         }
     ]
 }
