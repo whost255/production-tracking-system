@@ -1,3 +1,13 @@
 {
-    "sets": []
+    "sets": [
+        {
+            "id": "SET-001",
+            "projectId": "PRJ-001",
+            "setNumber": 1,
+            "setName": "Set 1",
+            "status": "Active",
+            "createdAt": "",
+            "updatedAt": ""
+        }
+    ]
 }
