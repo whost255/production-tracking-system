@@ -1,16 +1,18 @@
 const App = {
 
-    init() {
+  init() {
 
-        this.setupNavigation();
+    this.setupNavigation();
 
-        this.setupMobileMenu();
+    this.setupMobileMenu();
 
-        console.log(
-            "Production Tracking System initialized."
-        );
+    this.hideLoader();
 
-    },
+    console.log(
+        "Production Tracking System initialized."
+    );
+
+},
 
 
     setupNavigation() {
@@ -127,3 +129,19 @@ document.addEventListener(
 
     }
 );
+hideLoader() {
+
+    const loader =
+        document.getElementById("appLoader");
+
+    if (!loader) {
+        return;
+    }
+
+    setTimeout(() => {
+
+        loader.classList.add("hidden");
+
+    }, 300);
+
+},
