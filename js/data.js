@@ -103,6 +103,96 @@ const DataStore = {
 
         }
 
+    },
+
+
+    getProjectById(projectId) {
+
+        return this.projects.find(
+            project => project.id === projectId
+        );
+
+    },
+
+
+    getSetById(setId) {
+
+        return this.sets.find(
+            set => set.id === setId
+        );
+
+    },
+
+
+    getPanelById(panelId) {
+
+        return this.panels.find(
+            panel => panel.id === panelId
+        );
+
+    },
+
+
+    getStageById(stageId) {
+
+        return this.stages.find(
+            stage => stage.id === stageId
+        );
+
+    },
+
+
+    getSetsByProject(projectId) {
+
+        return this.sets.filter(
+            set => set.projectId === projectId
+        );
+
+    },
+
+
+    getPanelsBySet(setId) {
+
+        return this.panels.filter(
+            panel => panel.setId === setId
+        );
+
+    },
+
+
+    getPanelsByProject(projectId) {
+
+        return this.panels.filter(
+            panel => panel.projectId === projectId
+        );
+
+    },
+
+
+    getProductionByPanel(panelId) {
+
+        return this.production.filter(
+            record => record.panelId === panelId
+        );
+
+    },
+
+
+    getProductionByStage(stageId) {
+
+        return this.production.filter(
+            record => record.stageId === stageId
+        );
+
+    },
+
+
+    getProductionByProject(projectId) {
+
+        return this.production.filter(
+            record => record.projectId === projectId
+        );
+
     }
 
 };
