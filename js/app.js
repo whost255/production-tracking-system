@@ -1,18 +1,33 @@
 const App = {
 
-    init() {
+    async init() {
 
-        this.setupNavigation();
+    this.setupNavigation();
 
-        this.setupMobileMenu();
+    this.setupMobileMenu();
 
-        this.hideLoader();
 
-        console.log(
-            "Production Tracking System initialized."
+    const dataLoaded =
+        await DataStore.loadAll();
+
+
+    if (!dataLoaded) {
+
+        console.error(
+            "Application data could not be loaded."
         );
 
-    },
+    }
+
+
+    this.hideLoader();
+
+
+    console.log(
+        "Production Tracking System initialized."
+    );
+
+},
 
 
     setupNavigation() {
