@@ -309,5 +309,72 @@ const DataStore = {
         );
 
     }
+    generateProductionRecords(
+        projectId,
+        setId,
+        panelId
+    ) {
 
+        const panelStages =
+            this.stages.filter(
+                stage => stage.active === true
+            );
+
+        const existingRecords =
+            this.getProductionByPanel(
+                panelId
+            );
+
+        panelStages.forEach(stage => {
+
+            const exists =
+                existingRecords.some(
+                    record =>
+                        record.stageId === stage.id
+                );
+
+            if (!exists) {
+
+                this.production.push({
+
+                    id:
+                        `PROD-${String(
+                            this.production.length + 1
+                        ).padStart(3, "0")}`,
+
+                    projectId:
+                        projectId,
+
+                    setId:
+                        setId,
+
+                    panelId:
+                        panelId,
+
+                    stageId:
+                        stage.id,
+
+                    status:
+                        "Pending",
+
+                    remarks:
+                        "",
+
+                    updatedAt:
+                        "",
+
+                    updatedBy:
+                        "System"
+
+                });
+
+            }
+
+        });
+
+        return this.getProductionByPanel(
+            panelId
+        );
+
+    },
 };
