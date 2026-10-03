@@ -193,6 +193,45 @@ const DataStore = {
             record => record.projectId === projectId
         );
 
+    },
+        getProductionRecord(
+        panelId,
+        stageId
+    ) {
+
+        return this.production.find(
+            record =>
+                record.panelId === panelId &&
+                record.stageId === stageId
+        );
+
+    },
+
+
+    getProductionBySet(setId) {
+
+        return this.production.filter(
+            record => record.setId === setId
+        );
+
+    },
+
+
+    getHistoryByPanel(panelId) {
+
+        return this.history.filter(
+            record => record.panelId === panelId
+        );
+
+    },
+
+
+    getHistoryByStage(stageId) {
+
+        return this.history.filter(
+            record => record.stageId === stageId
+        );
+
     }
 
 };
