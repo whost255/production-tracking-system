@@ -1159,3 +1159,37 @@ body {
     font-weight: 700;
 
 }
+/* =====================================
+   PROJECT PROGRESS BAR
+===================================== */
+
+.project-progress-bar-container {
+
+    flex: 1;
+
+    height: 10px;
+
+    background: #e5e7eb;
+
+    border-radius: 6px;
+
+    overflow: hidden;
+
+    min-width: 120px;
+
+}
+
+
+.project-progress-bar {
+
+    height: 100%;
+
+    width: 0;
+
+    background: #2563eb;
+
+    border-radius: 6px;
+
+    transition: width 0.3s ease;
+
+}
