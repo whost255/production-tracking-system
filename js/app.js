@@ -1,6 +1,6 @@
 const App = {
 
-        currentPage: "dashboard",
+    currentPage: "dashboard",
 
     currentProjectId: null,
 
@@ -12,85 +12,138 @@ const App = {
 
     initialized: false,
 
+
     async init() {
 
-    this.setupNavigation();
+        this.setupNavigation();
 
-    this.setupMobileMenu();
-
-
-    const dataLoaded =
-        await DataStore.loadAll();
+        this.setupMobileMenu();
 
 
-    if (!dataLoaded) {
+        const dataLoaded =
+            await DataStore.loadAll();
 
-        console.error(
-            "Application data could not be loaded."
+
+        if (!dataLoaded) {
+
+            console.error(
+                "Application data could not be loaded."
+            );
+
+        }
+
+
+        this.hideLoader();
+
+
+        console.log(
+            "Production Tracking System initialized."
         );
 
-    }
-
-
-    this.hideLoader();
-
-
-    console.log(
-        "Production Tracking System initialized."
-    );
-
-},
+    },
 
 
     setupNavigation() {
 
         const navItems =
-            document.querySelectorAll(".nav-item");
-
-        const pages =
-            document.querySelectorAll(".page");
+            document.querySelectorAll(
+                ".nav-item"
+            );
 
 
         navItems.forEach(item => {
 
-            item.addEventListener("click", () => {
+            item.addEventListener(
+                "click",
+                () => {
 
-                const pageName =
-                    item.dataset.page;
-
-
-                navItems.forEach(nav => {
-
-                    nav.classList.remove("active");
-
-                });
+                    const pageName =
+                        item.dataset.page;
 
 
-                item.classList.add("active");
-
-
-                pages.forEach(page => {
-
-                    page.classList.remove("active");
-
-                });
-
-
-                const targetPage =
-                    document.getElementById(
-                        `${pageName}Page`
+                    this.showPage(
+                        pageName
                     );
 
-
-                if (targetPage) {
-
-                    targetPage.classList.add("active");
-
                 }
-
-            });
+            );
 
         });
+
+    },
+
+
+    showPage(pageName) {
+
+        const navItems =
+            document.querySelectorAll(
+                ".nav-item"
+            );
+
+
+        const pages =
+            document.querySelectorAll(
+                ".page"
+            );
+
+
+        navItems.forEach(item => {
+
+            item.classList.remove(
+                "active"
+            );
+
+        });
+
+
+        pages.forEach(page => {
+
+            page.classList.remove(
+                "active"
+            );
+
+        });
+
+
+        const selectedNav =
+            document.querySelector(
+                `.nav-item[data-page="${pageName}"]`
+            );
+
+
+        const selectedPage =
+            document.getElementById(
+                `${pageName}Page`
+            );
+
+
+        if (!selectedPage) {
+
+            console.warn(
+                `Page not found: ${pageName}`
+            );
+
+            return;
+
+        }
+
+
+        if (selectedNav) {
+
+            selectedNav.classList.add(
+                "active"
+            );
+
+        }
+
+
+        selectedPage.classList.add(
+            "active"
+        );
+
+
+        this.currentPage =
+            pageName;
 
     },
 
