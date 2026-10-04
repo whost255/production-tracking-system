@@ -33,7 +33,7 @@ const App = {
         }
 
 
-       this.hideLoader();
+ this.hideLoader();
 
 this.initialized = true;
 
