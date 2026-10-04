@@ -74,54 +74,81 @@ const Dashboard = {
 
     },
 
-getStageSummary() {
 
-    const summary = {};
+    getStageSummary() {
 
-    DataStore.production.forEach(
-        record => {
+        const summary = {};
 
-            const stage =
-                DataStore.getStageById(
-                    record.stageId
-                );
+        DataStore.production.forEach(
+            record => {
 
-            if (!stage) {
-                return;
+                const stage =
+                    DataStore.getStageById(
+                        record.stageId
+                    );
+
+                if (!stage) {
+
+                    return;
+
+                }
+
+                if (!summary[stage.id]) {
+
+                    summary[stage.id] = {
+
+                        stageId:
+                            stage.id,
+
+                        stageName:
+                            stage.name,
+
+                        total: 0,
+
+                        completed: 0,
+
+                        progress: 0
+
+                    };
+
+                }
+
+                summary[stage.id].total++;
+
+                if (
+                    record.status === "Completed"
+                ) {
+
+                    summary[stage.id].completed++;
+
+                }
+
             }
+        );
 
-            if (!summary[stage.id]) {
 
-                summary[stage.id] = {
+        Object.values(summary).forEach(
+            stage => {
 
-                    stageId: stage.id,
-
-                    stageName: stage.name,
-
-                    total: 0,
-
-                    completed: 0
-
-                };
-
-            }
-
-            summary[stage.id].total++;
-
-            if (
-                record.status === "Completed"
-            ) {
-
-                summary[stage.id].completed++;
+                stage.progress =
+                    stage.total > 0
+                        ? Math.round(
+                            (
+                                stage.completed /
+                                stage.total
+                            ) * 100
+                        )
+                        : 0;
 
             }
+        );
 
-        }
-    );
 
-    return summary;
+        return summary;
 
-},
+    },
+
+
     renderStatusDistribution() {
 
         const container =
@@ -182,69 +209,72 @@ getStageSummary() {
 
     },
 
-renderStageSummary() {
 
-    const container =
-        document.getElementById(
-            "stageSummary"
-        );
+    renderStageSummary() {
 
-    if (!container) {
+        const container =
+            document.getElementById(
+                "stageSummary"
+            );
 
-        return;
+        if (!container) {
 
-    }
+            return;
 
-    const summary =
-        this.getStageSummary();
+        }
 
-    const stages =
-        Object.values(summary);
+        const summary =
+            this.getStageSummary();
 
-    if (stages.length === 0) {
+        const stages =
+            Object.values(summary);
 
-        container.innerHTML = `
-            <div class="empty-state">
+        if (stages.length === 0) {
 
-                <div class="empty-state-title">
-                    No production data
-                </div>
+            container.innerHTML = `
+                <div class="empty-state">
 
-                <div class="empty-state-text">
-                    No production stage records are available.
-                </div>
-
-            </div>
-        `;
-
-        return;
-
-    }
-
-    container.innerHTML =
-        stages.map(stage => {
-
-            return `
-                <div class="stage-summary-row">
-
-                    <div class="stage-summary-name">
-                        ${stage.stageName}
+                    <div class="empty-state-title">
+                        No production data
                     </div>
 
-                    <div class="stage-summary-total">
-                        Total: ${stage.total}
-                    </div>
-
-                    <div class="stage-summary-completed">
-                        Completed: ${stage.completed}
+                    <div class="empty-state-text">
+                        No production stage records are available.
                     </div>
 
                 </div>
             `;
 
-        }).join("");
+            return;
 
-},
+        }
+
+        container.innerHTML =
+            stages.map(stage => {
+
+                return `
+                    <div class="stage-summary-row">
+
+                        <div class="stage-summary-name">
+                            ${stage.stageName}
+                        </div>
+
+                        <div class="stage-summary-total">
+                            Total: ${stage.total}
+                        </div>
+
+                        <div class="stage-summary-completed">
+                            Completed: ${stage.completed}
+                        </div>
+
+                    </div>
+                `;
+
+            }).join("");
+
+    },
+
+
     render() {
 
         const kpiData =
@@ -331,6 +361,7 @@ renderStageSummary() {
 
 
         this.renderStatusDistribution();
+
         this.renderStageSummary();
 
     }
