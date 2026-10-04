@@ -144,79 +144,88 @@ const Dashboard = {
 
 },
 
-    getStageSummary() {
+   getStageSummary() {
 
-        const summary = {};
+    const selectedProjectId =
+        App.currentProjectId;
 
-        DataStore.production.forEach(
-            record => {
+    const records =
+        selectedProjectId
+            ? DataStore.production.filter(
+                record =>
+                    record.projectId ===
+                    selectedProjectId
+            )
+            : DataStore.production;
 
-                const stage =
-                    DataStore.getStageById(
-                        record.stageId
-                    );
+    const summary = {};
 
-                if (!stage) {
+    records.forEach(
+        record => {
 
-                    return;
+            const stage =
+                DataStore.getStageById(
+                    record.stageId
+                );
 
-                }
+            if (!stage) {
 
-                if (!summary[stage.id]) {
-
-                    summary[stage.id] = {
-
-                        stageId:
-                            stage.id,
-
-                        stageName:
-                            stage.name,
-
-                        total: 0,
-
-                        completed: 0,
-
-                        progress: 0
-
-                    };
-
-                }
-
-                summary[stage.id].total++;
-
-                if (
-                    record.status === "Completed"
-                ) {
-
-                    summary[stage.id].completed++;
-
-                }
+                return;
 
             }
-        );
 
+            if (!summary[stage.id]) {
 
-        Object.values(summary).forEach(
-            stage => {
+                summary[stage.id] = {
 
-                stage.progress =
-                    stage.total > 0
-                        ? Math.round(
-                            (
-                                stage.completed /
-                                stage.total
-                            ) * 100
-                        )
-                        : 0;
+                    stageId:
+                        stage.id,
+
+                    stageName:
+                        stage.name,
+
+                    total: 0,
+
+                    completed: 0,
+
+                    progress: 0
+
+                };
 
             }
-        );
 
+            summary[stage.id].total++;
 
-        return summary;
+            if (
+                record.status === "Completed"
+            ) {
 
-    },
+                summary[stage.id].completed++;
 
+            }
+
+        }
+    );
+
+    Object.values(summary).forEach(
+        stage => {
+
+            stage.progress =
+                stage.total > 0
+                    ? Math.round(
+                        (
+                            stage.completed /
+                            stage.total
+                        ) * 100
+                    )
+                    : 0;
+
+        }
+    );
+
+    return summary;
+
+},
 
     getProjectProgress(projectId) {
 
