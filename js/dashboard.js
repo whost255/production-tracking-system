@@ -152,7 +152,33 @@ refresh() {
 
     },
 
+getProjectProgress(projectId) {
 
+    const records =
+        DataStore.getProductionByProject(
+            projectId
+        );
+
+    if (records.length === 0) {
+
+        return 0;
+
+    }
+
+    const completedRecords =
+        records.filter(
+            record =>
+                record.status === "Completed"
+        ).length;
+
+    return Math.round(
+        (
+            completedRecords /
+            records.length
+        ) * 100
+    );
+
+},
     renderStatusDistribution() {
 
         const container =
