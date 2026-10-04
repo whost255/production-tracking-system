@@ -76,77 +76,152 @@ console.log(
 
     showPage(pageName) {
 
-        const navItems =
-            document.querySelectorAll(
-                ".nav-item"
-            );
-
-
-        const pages =
-            document.querySelectorAll(
-                ".page"
-            );
-
-
-        navItems.forEach(item => {
-
-            item.classList.remove(
-                "active"
-            );
-
-        });
-
-
-        pages.forEach(page => {
-
-            page.classList.remove(
-                "active"
-            );
-
-        });
-
-
-        const selectedNav =
-            document.querySelector(
-                `.nav-item[data-page="${pageName}"]`
-            );
-
-
-        const selectedPage =
-            document.getElementById(
-                `${pageName}Page`
-            );
-
-
-        if (!selectedPage) {
-
-            console.warn(
-                `Page not found: ${pageName}`
-            );
-
-            return;
-
-        }
-
-
-        if (selectedNav) {
-
-            selectedNav.classList.add(
-                "active"
-            );
-
-        }
-
-
-        selectedPage.classList.add(
-            "active"
+    const navItems =
+        document.querySelectorAll(
+            ".nav-item"
         );
 
 
-        this.currentPage =
-            pageName;
+    const pages =
+        document.querySelectorAll(
+            ".page"
+        );
 
-    },
+
+    navItems.forEach(item => {
+
+        item.classList.remove(
+            "active"
+        );
+
+    });
+
+
+    pages.forEach(page => {
+
+        page.classList.remove(
+            "active"
+        );
+
+    });
+
+
+    const selectedNav =
+        document.querySelector(
+            `.nav-item[data-page="${pageName}"]`
+        );
+
+
+    const selectedPage =
+        document.getElementById(
+            `${pageName}Page`
+        );
+
+
+    if (!selectedPage) {
+
+        console.warn(
+            `Page not found: ${pageName}`
+        );
+
+        return;
+
+    }
+
+
+    if (selectedNav) {
+
+        selectedNav.classList.add(
+            "active"
+        );
+
+    }
+
+
+    selectedPage.classList.add(
+        "active"
+    );
+
+
+    this.currentPage =
+        pageName;
+
+
+    switch (pageName) {
+
+        case "dashboard":
+
+            if (
+                typeof Dashboard !==
+                "undefined" &&
+                typeof Dashboard.render ===
+                "function"
+            ) {
+
+                Dashboard.render();
+
+            }
+
+            break;
+
+
+        case "projects":
+
+            if (
+                typeof Projects !==
+                "undefined" &&
+                typeof Projects.render ===
+                "function"
+            ) {
+
+                Projects.render();
+
+            }
+
+            break;
+
+
+        case "production":
+
+            if (
+                typeof Production !==
+                "undefined" &&
+                typeof Production.render ===
+                "function"
+            ) {
+
+                Production.render();
+
+            }
+
+            break;
+
+
+        case "history":
+
+            if (
+                typeof History !==
+                "undefined" &&
+                typeof History.render ===
+                "function"
+            ) {
+
+                History.render();
+
+            }
+
+            break;
+
+
+        default:
+
+            console.warn(
+                `No renderer configured for page: ${pageName}`
+            );
+
+    }
+
+},
 
 
     setupMobileMenu() {
