@@ -388,82 +388,91 @@ const Dashboard = {
 
     renderProjectProgress() {
 
-        const container =
-            document.getElementById(
-                "projectProgress"
-            );
+    const container =
+        document.getElementById(
+            "projectProgress"
+        );
 
-        if (!container) {
+    if (!container) {
 
-            return;
+        return;
 
-        }
+    }
 
-        const projects =
-            DataStore.projects;
+    const selectedProjectId =
+        App.currentProjectId;
 
-        if (projects.length === 0) {
+    const projects =
+        selectedProjectId
+            ? DataStore.projects.filter(
+                project =>
+                    project.id ===
+                    selectedProjectId
+            )
+            : DataStore.projects;
 
-            container.innerHTML = `
-                <div class="empty-state">
+    if (projects.length === 0) {
 
-                    <div class="empty-state-title">
-                        No projects
+        container.innerHTML = `
+            <div class="empty-state">
+
+                <div class="empty-state-title">
+                    No projects
+                </div>
+
+                <div class="empty-state-text">
+                    No projects are available.
+                </div>
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML =
+        projects.map(project => {
+
+            const progress =
+                this.getProjectProgress(
+                    project.id
+                );
+
+            return `
+                <div class="project-progress-row">
+
+                    <div class="project-progress-info">
+
+                        <div class="project-progress-name">
+                            ${project.projectName}
+                        </div>
+
+                        <div class="project-progress-code">
+                            ${project.projectCode}
+                        </div>
+
                     </div>
 
-                    <div class="empty-state-text">
-                        No projects are available.
+                    <div class="project-progress-bar-container">
+
+                        <div
+                            class="project-progress-bar"
+                            style="width: ${progress}%"
+                        ></div>
+
+                    </div>
+
+                    <div class="project-progress-value">
+                        ${progress}%
                     </div>
 
                 </div>
             `;
 
-            return;
+        }).join("");
 
-        }
-
-        container.innerHTML =
-            projects.map(project => {
-
-                const progress =
-                    this.getProjectProgress(
-                        project.id
-                    );
-
-                return `
-                    <div class="project-progress-row">
-
-                        <div class="project-progress-info">
-
-                            <div class="project-progress-name">
-                                ${project.projectName}
-                            </div>
-
-                            <div class="project-progress-code">
-                                ${project.projectCode}
-                            </div>
-
-                        </div>
-
-                        <div class="project-progress-bar-container">
-
-                            <div
-                                class="project-progress-bar"
-                                style="width: ${progress}%"
-                            ></div>
-
-                        </div>
-
-                        <div class="project-progress-value">
-                            ${progress}%
-                        </div>
-
-                    </div>
-                `;
-
-            }).join("");
-
-    },
+},
 
 
     renderProjectFilter() {
