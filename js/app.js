@@ -33,7 +33,9 @@ const App = {
         }
 
 
- this.hideLoader();
+this.showPage("dashboard");
+
+this.hideLoader();
 
 this.initialized = true;
 
