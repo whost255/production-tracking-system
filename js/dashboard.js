@@ -54,14 +54,13 @@ const Dashboard = {
                 : 0;
 
         return {
-            totalProjects,
-            totalSets,
-            totalPanels,
-            totalProductionRecords,
-            completedProductionRecords,
-            overallProgress
+            totalProjects: totalProjects,
+            totalSets: totalSets,
+            totalPanels: totalPanels,
+            totalProductionRecords: totalProductionRecords,
+            completedProductionRecords: completedProductionRecords,
+            overallProgress: overallProgress
         };
-
     },
 
 
@@ -99,7 +98,6 @@ const Dashboard = {
         });
 
         return summary;
-
     },
 
 
@@ -169,7 +167,6 @@ const Dashboard = {
         });
 
         return summary;
-
     },
 
 
@@ -195,14 +192,15 @@ const Dashboard = {
                 records.length
             ) * 100
         );
-
     },
 
 
     renderStatusDistribution() {
 
         const container =
-            document.getElementById("statusDistribution");
+            document.getElementById(
+                "statusDistribution"
+            );
 
         if (!container) {
 
@@ -218,19 +216,15 @@ const Dashboard = {
 
         if (statuses.length === 0) {
 
-            container.innerHTML = `
-                <div class="empty-state">
-
-                    <div class="empty-state-title">
-                        No production data
-                    </div>
-
-                    <div class="empty-state-text">
-                        No production status records are available.
-                    </div>
-
-                </div>
-            `;
+            container.innerHTML =
+                '<div class="empty-state">' +
+                    '<div class="empty-state-title">' +
+                        'No production data' +
+                    '</div>' +
+                    '<div class="empty-state-text">' +
+                        'No production status records are available.' +
+                    '</div>' +
+                '</div>';
 
             return;
 
@@ -239,19 +233,19 @@ const Dashboard = {
         container.innerHTML =
             statuses.map(status => {
 
-                return `
-                    <div class="status-summary-row">
+                return (
+                    '<div class="status-summary-row">' +
 
-                        <div class="status-summary-name">
-                            ${status}
-                        </div>
+                        '<div class="status-summary-name">' +
+                            status +
+                        '</div>' +
 
-                        <div class="status-summary-count">
-                            ${summary[status]}
-                        </div>
+                        '<div class="status-summary-count">' +
+                            summary[status] +
+                        '</div>' +
 
-                    </div>
-                `;
+                    '</div>'
+                );
 
             }).join("");
 
@@ -261,7 +255,9 @@ const Dashboard = {
     renderStageSummary() {
 
         const container =
-            document.getElementById("stageSummary");
+            document.getElementById(
+                "stageSummary"
+            );
 
         if (!container) {
 
@@ -272,53 +268,49 @@ const Dashboard = {
         const summary =
             this.getStageSummary();
 
-        const stages =
+        const stageList =
             Object.values(summary);
 
-        if (stages.length === 0) {
+        if (stageList.length === 0) {
 
-            container.innerHTML = `
-                <div class="empty-state">
-
-                    <div class="empty-state-title">
-                        No production data
-                    </div>
-
-                    <div class="empty-state-text">
-                        No production stage records are available.
-                    </div>
-
-                </div>
-            `;
+            container.innerHTML =
+                '<div class="empty-state">' +
+                    '<div class="empty-state-title">' +
+                        'No production data' +
+                    '</div>' +
+                    '<div class="empty-state-text">' +
+                        'No production stage records are available.' +
+                    '</div>' +
+                '</div>';
 
             return;
 
         }
 
         container.innerHTML =
-            stages.map(stage => {
+            stageList.map(stage => {
 
-                return `
-                    <div class="stage-summary-row">
+                return (
+                    '<div class="stage-summary-row">' +
 
-                        <div class="stage-summary-name">
-                            ${stage.stageName}
-                        </div>
+                        '<div class="stage-summary-name">' +
+                            stage.stageName +
+                        '</div>' +
 
-                        <div class="stage-summary-total">
-                            Total: ${stage.total}
-                        </div>
+                        '<div class="stage-summary-total">' +
+                            'Total: ' + stage.total +
+                        '</div>' +
 
-                        <div class="stage-summary-completed">
-                            Completed: ${stage.completed}
-                        </div>
+                        '<div class="stage-summary-completed">' +
+                            'Completed: ' + stage.completed +
+                        '</div>' +
 
-                        <div class="stage-summary-progress">
-                            Progress: ${stage.progress}%
-                        </div>
+                        '<div class="stage-summary-progress">' +
+                            'Progress: ' + stage.progress + '%' +
+                        '</div>' +
 
-                    </div>
-                `;
+                    '</div>'
+                );
 
             }).join("");
 
@@ -328,7 +320,9 @@ const Dashboard = {
     renderProjectProgress() {
 
         const container =
-            document.getElementById("projectProgress");
+            document.getElementById(
+                "projectProgress"
+            );
 
         if (!container) {
 
@@ -339,7 +333,7 @@ const Dashboard = {
         const selectedProjectId =
             App.currentProjectId;
 
-        const projects =
+        const projectList =
             selectedProjectId
                 ? DataStore.projects.filter(
                     project =>
@@ -347,62 +341,60 @@ const Dashboard = {
                 )
                 : DataStore.projects;
 
-        if (projects.length === 0) {
+        if (projectList.length === 0) {
 
-            container.innerHTML = `
-                <div class="empty-state">
-
-                    <div class="empty-state-title">
-                        No projects
-                    </div>
-
-                    <div class="empty-state-text">
-                        No projects are available.
-                    </div>
-
-                </div>
-            `;
+            container.innerHTML =
+                '<div class="empty-state">' +
+                    '<div class="empty-state-title">' +
+                        'No projects' +
+                    '</div>' +
+                    '<div class="empty-state-text">' +
+                        'No projects are available.' +
+                    '</div>' +
+                '</div>';
 
             return;
 
         }
 
         container.innerHTML =
-            projects.map(project => {
+            projectList.map(project => {
 
                 const progress =
-                    this.getProjectProgress(project.id);
+                    this.getProjectProgress(
+                        project.id
+                    );
 
-                return `
-                    <div class="project-progress-row">
+                return (
+                    '<div class="project-progress-row">' +
 
-                        <div class="project-progress-info">
+                        '<div class="project-progress-info">' +
 
-                            <div class="project-progress-name">
-                                ${project.projectName}
-                            </div>
+                            '<div class="project-progress-name">' +
+                                project.projectName +
+                            '</div>' +
 
-                            <div class="project-progress-code">
-                                ${project.projectCode}
-                            </div>
+                            '<div class="project-progress-code">' +
+                                project.projectCode +
+                            '</div>' +
 
-                        </div>
+                        '</div>' +
 
-                        <div class="project-progress-bar-container">
+                        '<div class="project-progress-bar-container">' +
 
-                            <div
-                                class="project-progress-bar"
-                                style="width: ${progress}%"
-                            ></div>
+                            '<div ' +
+                                'class="project-progress-bar" ' +
+                                'style="width: ' + progress + '%"' +
+                            '></div>' +
 
-                        </div>
+                        '</div>' +
 
-                        <div class="project-progress-value">
-                            ${progress}%
-                        </div>
+                        '<div class="project-progress-value">' +
+                            progress + '%' +
+                        '</div>' +
 
-                    </div>
-                `;
+                    '</div>'
+                );
 
             }).join("");
 
@@ -425,16 +417,15 @@ const Dashboard = {
         const currentValue =
             App.currentProjectId || "all";
 
-        const projects =
+        const projectList =
             DataStore.projects;
 
-        select.innerHTML = `
-            <option value="all">
-                All Projects
-            </option>
-        `;
+        select.innerHTML =
+            '<option value="all">' +
+                'All Projects' +
+            '</option>';
 
-        projects.forEach(project => {
+        projectList.forEach(project => {
 
             const option =
                 document.createElement("option");
@@ -443,7 +434,9 @@ const Dashboard = {
                 project.id;
 
             option.textContent =
-                `${project.projectCode} - ${project.projectName}`;
+                project.projectCode +
+                " - " +
+                project.projectName;
 
             select.appendChild(option);
 
@@ -486,7 +479,8 @@ const Dashboard = {
 
                 if (projectId === "all") {
 
-                    App.currentProjectId = null;
+                    App.currentProjectId =
+                        null;
 
                 } else {
 
@@ -579,7 +573,7 @@ const Dashboard = {
         if (overallProgress) {
 
             overallProgress.textContent =
-                `${kpiData.overallProgress}%`;
+                kpiData.overallProgress + "%";
 
         }
 
