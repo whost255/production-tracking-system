@@ -35,6 +35,8 @@ const App = {
 
 this.showPage("dashboard");
 
+Dashboard.render();
+
 this.hideLoader();
 
 this.initialized = true;
