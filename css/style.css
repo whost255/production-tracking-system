@@ -1030,3 +1030,68 @@ body {
 .gap-16 {
     gap: 16px;
 }
+/* =====================================
+   DASHBOARD SUMMARY STYLES
+===================================== */
+
+.status-summary-row,
+.stage-summary-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 14px 16px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+}
+
+.status-summary-row:last-child,
+.stage-summary-row:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.status-summary-name,
+.stage-summary-name {
+
+    flex: 1;
+
+    font-weight: 600;
+
+}
+
+
+.status-summary-count {
+
+    min-width: 40px;
+
+    text-align: center;
+
+    font-weight: 600;
+
+}
+
+
+.stage-summary-total,
+.stage-summary-completed {
+
+    min-width: 110px;
+
+    font-size: 14px;
+
+    color: #6b7280;
+
+}
+
+
+.stage-summary-completed {
+
+    font-weight: 600;
+
+}
