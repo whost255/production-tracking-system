@@ -308,6 +308,117 @@ const DataStore = {
             panelId
         );
 
+    },
+
+
+    updateProductionStatus(
+        panelId,
+        stageId,
+        newStatus,
+        remarks = "",
+        updatedBy = "System"
+    ) {
+
+        const record =
+            this.getProductionRecord(
+                panelId,
+                stageId
+            );
+
+
+        if (!record) {
+
+            throw new Error(
+                "Production record not found."
+            );
+
+        }
+
+
+        const stage =
+            this.getStageById(
+                stageId
+            );
+
+
+        if (!stage) {
+
+            throw new Error(
+                "Stage not found."
+            );
+
+        }
+
+
+        if (!stage.statuses.includes(newStatus)) {
+
+            throw new Error(
+                `Invalid status "${newStatus}" for ${stage.name}.`
+            );
+
+        }
+
+
+        const previousStatus =
+            record.status;
+
+
+        record.status =
+            newStatus;
+
+
+        record.remarks =
+            remarks;
+
+
+        record.updatedAt =
+            new Date().toISOString();
+
+
+        record.updatedBy =
+            updatedBy;
+
+
+        this.history.push({
+
+            id:
+                `HIS-${String(
+                    this.history.length + 1
+                ).padStart(3, "0")}`,
+
+            projectId:
+                record.projectId,
+
+            setId:
+                record.setId,
+
+            panelId:
+                record.panelId,
+
+            stageId:
+                record.stageId,
+
+            previousStatus:
+                previousStatus,
+
+            newStatus:
+                newStatus,
+
+            remarks:
+                remarks,
+
+            changedAt:
+                record.updatedAt,
+
+            changedBy:
+                updatedBy
+
+        });
+
+
+        return record;
+
     }
+
 
 };
