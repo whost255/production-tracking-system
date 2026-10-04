@@ -51,14 +51,88 @@ const Dashboard = {
 
     render() {
 
-        const kpiData =
-            this.getKPIData();
+    const kpiData =
+        this.getKPIData();
 
-        console.log(
-            "Dashboard KPI Data:",
-            kpiData
+
+    const totalProjects =
+        document.getElementById(
+            "kpiTotalProjects"
         );
 
+    const totalSets =
+        document.getElementById(
+            "kpiTotalSets"
+        );
+
+    const totalPanels =
+        document.getElementById(
+            "kpiTotalPanels"
+        );
+
+    const totalProduction =
+        document.getElementById(
+            "kpiTotalProduction"
+        );
+
+    const completedProduction =
+        document.getElementById(
+            "kpiCompletedProduction"
+        );
+
+    const overallProgress =
+        document.getElementById(
+            "kpiOverallProgress"
+        );
+
+
+    if (totalProjects) {
+
+        totalProjects.textContent =
+            kpiData.totalProjects;
+
     }
+
+
+    if (totalSets) {
+
+        totalSets.textContent =
+            kpiData.totalSets;
+
+    }
+
+
+    if (totalPanels) {
+
+        totalPanels.textContent =
+            kpiData.totalPanels;
+
+    }
+
+
+    if (totalProduction) {
+
+        totalProduction.textContent =
+            kpiData.totalProductionRecords;
+
+    }
+
+
+    if (completedProduction) {
+
+        completedProduction.textContent =
+            kpiData.completedProductionRecords;
+
+    }
+
+
+    if (overallProgress) {
+
+        overallProgress.textContent =
+            `${kpiData.overallProgress}%`;
+
+    }
+
+},
 
 };
