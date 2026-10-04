@@ -47,7 +47,11 @@ const Dashboard = {
         };
 
     },
+refresh() {
 
+    this.render();
+
+},
 
     getStatusSummary() {
 
