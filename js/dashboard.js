@@ -399,6 +399,9 @@ renderProjectProgress() {
 
     }
 
+    const currentValue =
+        App.currentProjectId || "all";
+
     const projects =
         DataStore.projects;
 
@@ -423,6 +426,9 @@ renderProjectProgress() {
 
     });
 
+    select.value =
+        currentValue;
+
 },
     setupProjectFilter() {
 
@@ -437,6 +443,12 @@ renderProjectProgress() {
 
     }
 
+    if (select.dataset.listenerAttached === "true") {
+
+        return;
+
+    }
+
     select.addEventListener(
         "change",
         () => {
@@ -446,7 +458,8 @@ renderProjectProgress() {
 
             if (projectId === "all") {
 
-                App.currentProjectId = null;
+                App.currentProjectId =
+                    null;
 
             } else {
 
@@ -459,6 +472,9 @@ renderProjectProgress() {
 
         }
     );
+
+    select.dataset.listenerAttached =
+        "true";
 
 },
     render() {
