@@ -1,5 +1,17 @@
 const App = {
 
+        currentPage: "dashboard",
+
+    currentProjectId: null,
+
+    currentSetId: null,
+
+    currentPanelId: null,
+
+    selectedStageId: null,
+
+    initialized: false,
+
     async init() {
 
     this.setupNavigation();
