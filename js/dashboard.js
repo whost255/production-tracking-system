@@ -74,7 +74,54 @@ const Dashboard = {
 
     },
 
+getStageSummary() {
 
+    const summary = {};
+
+    DataStore.production.forEach(
+        record => {
+
+            const stage =
+                DataStore.getStageById(
+                    record.stageId
+                );
+
+            if (!stage) {
+                return;
+            }
+
+            if (!summary[stage.id]) {
+
+                summary[stage.id] = {
+
+                    stageId: stage.id,
+
+                    stageName: stage.name,
+
+                    total: 0,
+
+                    completed: 0
+
+                };
+
+            }
+
+            summary[stage.id].total++;
+
+            if (
+                record.status === "Completed"
+            ) {
+
+                summary[stage.id].completed++;
+
+            }
+
+        }
+    );
+
+    return summary;
+
+},
     renderStatusDistribution() {
 
         const container =
