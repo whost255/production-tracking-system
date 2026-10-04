@@ -33,12 +33,13 @@ const App = {
         }
 
 
-        this.hideLoader();
+       this.hideLoader();
 
+this.initialized = true;
 
-        console.log(
-            "Production Tracking System initialized."
-        );
+console.log(
+    "Production Tracking System initialized."
+);
 
     },
 
