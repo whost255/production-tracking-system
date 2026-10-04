@@ -71,7 +71,62 @@ getStatusSummary() {
     return summary;
 
 },
+renderStatusDistribution() {
 
+    const container =
+        document.getElementById(
+            "statusDistribution"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    const summary =
+        this.getStatusSummary();
+
+    const statuses =
+        Object.keys(summary);
+
+    if (statuses.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty-state">
+
+                <div class="empty-state-title">
+                    No production data
+                </div>
+
+                <div class="empty-state-text">
+                    No production status records are available.
+                </div>
+
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        statuses.map(status => {
+
+            return `
+                <div class="status-summary-row">
+
+                    <div class="status-summary-name">
+                        ${status}
+                    </div>
+
+                    <div class="status-summary-count">
+                        ${summary[status]}
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+},
     render() {
 
     const kpiData =
@@ -157,5 +212,5 @@ getStatusSummary() {
     }
 
 },
-
+this.renderStatusDistribution();
 };
