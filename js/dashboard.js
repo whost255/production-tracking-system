@@ -424,6 +424,43 @@ renderProjectProgress() {
     });
 
 },
+    setupProjectFilter() {
+
+    const select =
+        document.getElementById(
+            "dashboardProjectSelect"
+        );
+
+    if (!select) {
+
+        return;
+
+    }
+
+    select.addEventListener(
+        "change",
+        () => {
+
+            const projectId =
+                select.value;
+
+            if (projectId === "all") {
+
+                App.currentProjectId = null;
+
+            } else {
+
+                App.currentProjectId =
+                    projectId;
+
+            }
+
+            this.render();
+
+        }
+    );
+
+},
     render() {
 
         const kpiData =
@@ -514,6 +551,7 @@ renderProjectProgress() {
         this.renderStageSummary();
         this.renderProjectProgress();
         this.renderProjectFilter();
+        this.setupProjectFilter();
 
     }
 
