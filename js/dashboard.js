@@ -367,9 +367,18 @@ renderProjectProgress() {
 
                     </div>
 
-                    <div class="project-progress-value">
-                        ${progress}%
-                    </div>
+                    <div class="project-progress-bar-container">
+
+    <div
+        class="project-progress-bar"
+        style="width: ${progress}%"
+    ></div>
+
+</div>
+
+<div class="project-progress-value">
+    ${progress}%
+</div>
 
                 </div>
             `;
