@@ -109,29 +109,40 @@ const Dashboard = {
 
     getStatusSummary() {
 
-        const summary = {};
+    const selectedProjectId =
+        App.currentProjectId;
 
-        DataStore.production.forEach(
-            record => {
+    const records =
+        selectedProjectId
+            ? DataStore.production.filter(
+                record =>
+                    record.projectId ===
+                    selectedProjectId
+            )
+            : DataStore.production;
 
-                const status =
-                    record.status || "Unknown";
+    const summary = {};
 
-                if (!summary[status]) {
+    records.forEach(
+        record => {
 
-                    summary[status] = 0;
+            const status =
+                record.status || "Unknown";
 
-                }
+            if (!summary[status]) {
 
-                summary[status]++;
+                summary[status] = 0;
 
             }
-        );
 
-        return summary;
+            summary[status]++;
 
-    },
+        }
+    );
 
+    return summary;
+
+},
 
     getStageSummary() {
 
