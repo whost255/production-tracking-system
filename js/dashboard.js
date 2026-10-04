@@ -1,24 +1,74 @@
+```javascript
 const Dashboard = {
 
     getKPIData() {
 
+        const selectedProjectId =
+            App.currentProjectId;
+
+
+        const filteredProjects =
+            selectedProjectId
+                ? DataStore.projects.filter(
+                    project =>
+                        project.id ===
+                        selectedProjectId
+                )
+                : DataStore.projects;
+
+
+        const filteredSets =
+            selectedProjectId
+                ? DataStore.sets.filter(
+                    set =>
+                        set.projectId ===
+                        selectedProjectId
+                )
+                : DataStore.sets;
+
+
+        const filteredPanels =
+            selectedProjectId
+                ? DataStore.panels.filter(
+                    panel =>
+                        panel.projectId ===
+                        selectedProjectId
+                )
+                : DataStore.panels;
+
+
+        const filteredProduction =
+            selectedProjectId
+                ? DataStore.production.filter(
+                    record =>
+                        record.projectId ===
+                        selectedProjectId
+                )
+                : DataStore.production;
+
+
         const totalProjects =
-            DataStore.projects.length;
+            filteredProjects.length;
+
 
         const totalSets =
-            DataStore.sets.length;
+            filteredSets.length;
+
 
         const totalPanels =
-            DataStore.panels.length;
+            filteredPanels.length;
+
 
         const totalProductionRecords =
-            DataStore.production.length;
+            filteredProduction.length;
+
 
         const completedProductionRecords =
-            DataStore.production.filter(
+            filteredProduction.filter(
                 record =>
                     record.status === "Completed"
             ).length;
+
 
         const overallProgress =
             totalProductionRecords > 0
@@ -29,6 +79,7 @@ const Dashboard = {
                     ) * 100
                 )
                 : 0;
+
 
         return {
 
@@ -47,11 +98,14 @@ const Dashboard = {
         };
 
     },
-refresh() {
 
-    this.render();
 
-},
+    refresh() {
+
+        this.render();
+
+    },
+
 
     getStatusSummary() {
 
@@ -152,33 +206,36 @@ refresh() {
 
     },
 
-getProjectProgress(projectId) {
 
-    const records =
-        DataStore.getProductionByProject(
-            projectId
+    getProjectProgress(projectId) {
+
+        const records =
+            DataStore.getProductionByProject(
+                projectId
+            );
+
+        if (records.length === 0) {
+
+            return 0;
+
+        }
+
+        const completedRecords =
+            records.filter(
+                record =>
+                    record.status === "Completed"
+            ).length;
+
+        return Math.round(
+            (
+                completedRecords /
+                records.length
+            ) * 100
         );
 
-    if (records.length === 0) {
+    },
 
-        return 0;
 
-    }
-
-    const completedRecords =
-        records.filter(
-            record =>
-                record.status === "Completed"
-        ).length;
-
-    return Math.round(
-        (
-            completedRecords /
-            records.length
-        ) * 100
-    );
-
-},
     renderStatusDistribution() {
 
         const container =
@@ -293,13 +350,13 @@ getProjectProgress(projectId) {
                             Total: ${stage.total}
                         </div>
 
-                       <div class="stage-summary-completed">
-    Completed: ${stage.completed}
-</div>
+                        <div class="stage-summary-completed">
+                            Completed: ${stage.completed}
+                        </div>
 
-<div class="stage-summary-progress">
-    Progress: ${stage.progress}%
-</div>
+                        <div class="stage-summary-progress">
+                            Progress: ${stage.progress}%
+                        </div>
 
                     </div>
                 `;
@@ -308,175 +365,185 @@ getProjectProgress(projectId) {
 
     },
 
-renderProjectProgress() {
 
-    const container =
-        document.getElementById(
-            "projectProgress"
-        );
+    renderProjectProgress() {
 
-    if (!container) {
+        const container =
+            document.getElementById(
+                "projectProgress"
+            );
 
-        return;
+        if (!container) {
 
-    }
+            return;
 
-    const projects =
-        DataStore.projects;
+        }
 
-    if (projects.length === 0) {
+        const projects =
+            DataStore.projects;
 
-        container.innerHTML = `
-            <div class="empty-state">
+        if (projects.length === 0) {
 
-                <div class="empty-state-title">
-                    No projects
-                </div>
+            container.innerHTML = `
+                <div class="empty-state">
 
-                <div class="empty-state-text">
-                    No projects are available.
-                </div>
-
-            </div>
-        `;
-
-        return;
-
-    }
-
-    container.innerHTML =
-        projects.map(project => {
-
-            const progress =
-                this.getProjectProgress(
-                    project.id
-                );
-
-            return `
-                <div class="project-progress-row">
-
-                    <div class="project-progress-info">
-
-                        <div class="project-progress-name">
-                            ${project.projectName}
-                        </div>
-
-                        <div class="project-progress-code">
-                            ${project.projectCode}
-                        </div>
-
+                    <div class="empty-state-title">
+                        No projects
                     </div>
 
-                    <div class="project-progress-bar-container">
-
-    <div
-        class="project-progress-bar"
-        style="width: ${progress}%"
-    ></div>
-
-</div>
-
-<div class="project-progress-value">
-    ${progress}%
-</div>
+                    <div class="empty-state-text">
+                        No projects are available.
+                    </div>
 
                 </div>
             `;
 
-        }).join("");
-
-},
-    renderProjectFilter() {
-
-    const select =
-        document.getElementById(
-            "dashboardProjectSelect"
-        );
-
-    if (!select) {
-
-        return;
-
-    }
-
-    const currentValue =
-        App.currentProjectId || "all";
-
-    const projects =
-        DataStore.projects;
-
-    select.innerHTML = `
-        <option value="all">
-            All Projects
-        </option>
-    `;
-
-    projects.forEach(project => {
-
-        const option =
-            document.createElement("option");
-
-        option.value =
-            project.id;
-
-        option.textContent =
-            `${project.projectCode} - ${project.projectName}`;
-
-        select.appendChild(option);
-
-    });
-
-    select.value =
-        currentValue;
-
-},
-    setupProjectFilter() {
-
-    const select =
-        document.getElementById(
-            "dashboardProjectSelect"
-        );
-
-    if (!select) {
-
-        return;
-
-    }
-
-    if (select.dataset.listenerAttached === "true") {
-
-        return;
-
-    }
-
-    select.addEventListener(
-        "change",
-        () => {
-
-            const projectId =
-                select.value;
-
-            if (projectId === "all") {
-
-                App.currentProjectId =
-                    null;
-
-            } else {
-
-                App.currentProjectId =
-                    projectId;
-
-            }
-
-            this.render();
+            return;
 
         }
-    );
 
-    select.dataset.listenerAttached =
-        "true";
+        container.innerHTML =
+            projects.map(project => {
 
-},
+                const progress =
+                    this.getProjectProgress(
+                        project.id
+                    );
+
+                return `
+                    <div class="project-progress-row">
+
+                        <div class="project-progress-info">
+
+                            <div class="project-progress-name">
+                                ${project.projectName}
+                            </div>
+
+                            <div class="project-progress-code">
+                                ${project.projectCode}
+                            </div>
+
+                        </div>
+
+                        <div class="project-progress-bar-container">
+
+                            <div
+                                class="project-progress-bar"
+                                style="width: ${progress}%"
+                            ></div>
+
+                        </div>
+
+                        <div class="project-progress-value">
+                            ${progress}%
+                        </div>
+
+                    </div>
+                `;
+
+            }).join("");
+
+    },
+
+
+    renderProjectFilter() {
+
+        const select =
+            document.getElementById(
+                "dashboardProjectSelect"
+            );
+
+        if (!select) {
+
+            return;
+
+        }
+
+        const currentValue =
+            App.currentProjectId || "all";
+
+        const projects =
+            DataStore.projects;
+
+        select.innerHTML = `
+            <option value="all">
+                All Projects
+            </option>
+        `;
+
+        projects.forEach(project => {
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                project.id;
+
+            option.textContent =
+                `${project.projectCode} - ${project.projectName}`;
+
+            select.appendChild(option);
+
+        });
+
+        select.value =
+            currentValue;
+
+    },
+
+
+    setupProjectFilter() {
+
+        const select =
+            document.getElementById(
+                "dashboardProjectSelect"
+            );
+
+        if (!select) {
+
+            return;
+
+        }
+
+        if (
+            select.dataset.listenerAttached ===
+            "true"
+        ) {
+
+            return;
+
+        }
+
+        select.addEventListener(
+            "change",
+            () => {
+
+                const projectId =
+                    select.value;
+
+                if (projectId === "all") {
+
+                    App.currentProjectId =
+                        null;
+
+                } else {
+
+                    App.currentProjectId =
+                        projectId;
+
+                }
+
+                this.render();
+
+            }
+        );
+
+        select.dataset.listenerAttached =
+            "true";
+
+    },
+
+
     render() {
 
         const kpiData =
@@ -565,10 +632,14 @@ renderProjectProgress() {
         this.renderStatusDistribution();
 
         this.renderStageSummary();
+
         this.renderProjectProgress();
+
         this.renderProjectFilter();
+
         this.setupProjectFilter();
 
     }
 
 };
+```
