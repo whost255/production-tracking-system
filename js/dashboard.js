@@ -308,7 +308,75 @@ getProjectProgress(projectId) {
 
     },
 
+renderProjectProgress() {
 
+    const container =
+        document.getElementById(
+            "projectProgress"
+        );
+
+    if (!container) {
+
+        return;
+
+    }
+
+    const projects =
+        DataStore.projects;
+
+    if (projects.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty-state">
+
+                <div class="empty-state-title">
+                    No projects
+                </div>
+
+                <div class="empty-state-text">
+                    No projects are available.
+                </div>
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML =
+        projects.map(project => {
+
+            const progress =
+                this.getProjectProgress(
+                    project.id
+                );
+
+            return `
+                <div class="project-progress-row">
+
+                    <div class="project-progress-info">
+
+                        <div class="project-progress-name">
+                            ${project.projectName}
+                        </div>
+
+                        <div class="project-progress-code">
+                            ${project.projectCode}
+                        </div>
+
+                    </div>
+
+                    <div class="project-progress-value">
+                        ${progress}%
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+},
     render() {
 
         const kpiData =
@@ -397,6 +465,7 @@ getProjectProgress(projectId) {
         this.renderStatusDistribution();
 
         this.renderStageSummary();
+        this.renderProjectProgress();
 
     }
 
