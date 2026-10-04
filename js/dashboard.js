@@ -47,7 +47,30 @@ const Dashboard = {
         };
 
     },
+getStatusSummary() {
 
+    const summary = {};
+
+    DataStore.production.forEach(
+        record => {
+
+            const status =
+                record.status || "Unknown";
+
+            if (!summary[status]) {
+
+                summary[status] = 0;
+
+            }
+
+            summary[status]++;
+
+        }
+    );
+
+    return summary;
+
+},
 
     render() {
 
