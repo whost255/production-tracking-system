@@ -386,6 +386,44 @@ renderProjectProgress() {
         }).join("");
 
 },
+    renderProjectFilter() {
+
+    const select =
+        document.getElementById(
+            "dashboardProjectSelect"
+        );
+
+    if (!select) {
+
+        return;
+
+    }
+
+    const projects =
+        DataStore.projects;
+
+    select.innerHTML = `
+        <option value="all">
+            All Projects
+        </option>
+    `;
+
+    projects.forEach(project => {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            project.id;
+
+        option.textContent =
+            `${project.projectCode} - ${project.projectName}`;
+
+        select.appendChild(option);
+
+    });
+
+},
     render() {
 
         const kpiData =
@@ -475,6 +513,7 @@ renderProjectProgress() {
 
         this.renderStageSummary();
         this.renderProjectProgress();
+        this.renderProjectFilter();
 
     }
 
