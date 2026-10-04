@@ -263,9 +263,13 @@ const Dashboard = {
                             Total: ${stage.total}
                         </div>
 
-                        <div class="stage-summary-completed">
-                            Completed: ${stage.completed}
-                        </div>
+                       <div class="stage-summary-completed">
+    Completed: ${stage.completed}
+</div>
+
+<div class="stage-summary-progress">
+    Progress: ${stage.progress}%
+</div>
 
                     </div>
                 `;
