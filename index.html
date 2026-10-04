@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,25 +28,26 @@
 
     <div id="appLoader" class="app-loader">
 
-    <div class="loader-content">
+        <div class="loader-content">
 
-        <div class="loader-logo">
-            PT
-        </div>
+            <div class="loader-logo">
+                PT
+            </div>
 
-        <div class="loader-title">
-            Production Tracking System
-        </div>
+            <div class="loader-title">
+                Production Tracking System
+            </div>
 
-        <div class="loader-spinner"></div>
+            <div class="loader-spinner"></div>
 
-        <div class="loader-text">
-            Loading system...
+            <div class="loader-text">
+                Loading system...
+            </div>
+
         </div>
 
     </div>
 
-</div>
 
     <div id="app">
 
@@ -177,7 +179,10 @@
 
             <main class="main-content">
 
-                <!-- Dashboard -->
+
+                <!-- =====================================
+                     DASHBOARD
+                ====================================== -->
 
                 <section
                     class="page active"
@@ -186,183 +191,238 @@
 
                     <div class="page-header">
 
-    <div>
-        <h1 class="page-title">
-            Dashboard
-        </h1>
+                        <div>
 
-        <p class="page-subtitle">
-            Production overview and key performance indicators
-        </p>
-    </div>
+                            <h1 class="page-title">
+                                Dashboard
+                            </h1>
 
-</div>
+                            <p class="page-subtitle">
+                                Production overview and key performance indicators
+                            </p>
 
+                        </div>
 
-<div class="kpi-grid">
-
-
-    <div class="kpi-card">
-
-        <div class="kpi-label">
-            Total Projects
-        </div>
-
-        <div
-            class="kpi-value"
-            id="kpiTotalProjects"
-        >
-            0
-        </div>
-
-        <div class="kpi-description">
-            Active and registered projects
-        </div>
-
-    </div>
+                    </div>
 
 
-    <div class="kpi-card">
+                    <!-- KPI GRID -->
 
-        <div class="kpi-label">
-            Total Sets
-        </div>
-
-        <div
-            class="kpi-value"
-            id="kpiTotalSets"
-        >
-            0
-        </div>
-
-        <div class="kpi-description">
-            Production sets across projects
-        </div>
-
-    </div>
+                    <div class="kpi-grid">
 
 
-    <div class="kpi-card">
+                        <div class="kpi-card">
 
-        <div class="kpi-label">
-            Total Panels
-        </div>
+                            <div class="kpi-label">
+                                Total Projects
+                            </div>
 
-        <div
-            class="kpi-value"
-            id="kpiTotalPanels"
-        >
-            0
-        </div>
+                            <div
+                                class="kpi-value"
+                                id="kpiTotalProjects"
+                            >
+                                0
+                            </div>
 
-        <div class="kpi-description">
-            Configured production panels
-        </div>
+                            <div class="kpi-description">
+                                Active and registered projects
+                            </div>
 
-    </div>
-
-
-    <div class="kpi-card">
-
-        <div class="kpi-label">
-            Production Records
-        </div>
-
-        <div
-            class="kpi-value"
-            id="kpiTotalProduction"
-        >
-            0
-        </div>
-
-        <div class="kpi-description">
-            Panel-stage production records
-        </div>
-
-    </div>
+                        </div>
 
 
-    <div class="kpi-card">
+                        <div class="kpi-card">
 
-        <div class="kpi-label">
-            Completed Records
-        </div>
+                            <div class="kpi-label">
+                                Total Sets
+                            </div>
 
-        <div
-            class="kpi-value"
-            id="kpiCompletedProduction"
-        >
-            0
-        </div>
+                            <div
+                                class="kpi-value"
+                                id="kpiTotalSets"
+                            >
+                                0
+                            </div>
 
-        <div class="kpi-description">
-            Production records completed
-        </div>
+                            <div class="kpi-description">
+                                Production sets across projects
+                            </div>
 
-    </div>
-
-
-    <div class="kpi-card">
-
-        <div class="kpi-label">
-            Overall Progress
-        </div>
-
-        <div
-            class="kpi-value"
-            id="kpiOverallProgress"
-        >
-            0%
-        </div>
-
-        <div class="kpi-description">
-            Overall production completion
-        </div>
-
-    </div>
+                        </div>
 
 
-</div>
+                        <div class="kpi-card">
 
-                
+                            <div class="kpi-label">
+                                Total Panels
+                            </div>
+
+                            <div
+                                class="kpi-value"
+                                id="kpiTotalPanels"
+                            >
+                                0
+                            </div>
+
+                            <div class="kpi-description">
+                                Configured production panels
+                            </div>
+
+                        </div>
+
+
+                        <div class="kpi-card">
+
+                            <div class="kpi-label">
+                                Production Records
+                            </div>
+
+                            <div
+                                class="kpi-value"
+                                id="kpiTotalProduction"
+                            >
+                                0
+                            </div>
+
+                            <div class="kpi-description">
+                                Panel-stage production records
+                            </div>
+
+                        </div>
+
+
+                        <div class="kpi-card">
+
+                            <div class="kpi-label">
+                                Completed Records
+                            </div>
+
+                            <div
+                                class="kpi-value"
+                                id="kpiCompletedProduction"
+                            >
+                                0
+                            </div>
+
+                            <div class="kpi-description">
+                                Production records completed
+                            </div>
+
+                        </div>
+
+
+                        <div class="kpi-card">
+
+                            <div class="kpi-label">
+                                Overall Progress
+                            </div>
+
+                            <div
+                                class="kpi-value"
+                                id="kpiOverallProgress"
+                            >
+                                0%
+                            </div>
+
+                            <div class="kpi-description">
+                                Overall production completion
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =====================================
+                         PRODUCTION STATUS DISTRIBUTION
+                    ====================================== -->
+
                     <div class="card">
 
-    <div class="card-header">
+                        <div class="card-header">
 
-        <div>
-            <h2 class="card-title">
-                Production Status Distribution
-            </h2>
+                            <div>
 
-            <p class="card-subtitle">
-                Current production records by status
-            </p>
-        </div>
+                                <h2 class="card-title">
+                                    Production Status Distribution
+                                </h2>
 
-    </div>
+                                <p class="card-subtitle">
+                                    Current production records by status
+                                </p>
 
-    <div id="statusDistribution">
+                            </div>
 
-        <div class="empty-state">
+                        </div>
 
-            <div class="empty-state-title">
-                No status data
-            </div>
 
-            <div class="empty-state-text">
-                Production status information will appear here.
-            </div>
+                        <div id="statusDistribution">
 
-        </div>
+                            <div class="empty-state">
 
-    </div>
+                                <div class="empty-state-title">
+                                    No status data
+                                </div>
 
-</div>
+                                <div class="empty-state-text">
+                                    Production status information will appear here.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         PRODUCTION STAGE SUMMARY
+                    ====================================== -->
+
+                    <div class="card">
+
+                        <div class="card-header">
+
+                            <div>
+
+                                <h2 class="card-title">
+                                    Production Stage Summary
+                                </h2>
+
+                                <p class="card-subtitle">
+                                    Production records by stage
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div id="stageSummary">
+
+                            <div class="empty-state">
+
+                                <div class="empty-state-title">
+                                    No stage data
+                                </div>
+
+                                <div class="empty-state-text">
+                                    Production stage information will appear here.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </section>
 
 
-                <!-- Projects -->
+                <!-- =====================================
+                     PROJECTS
+                ====================================== -->
 
                 <section
                     class="page"
@@ -395,7 +455,9 @@
                 </section>
 
 
-                <!-- Production -->
+                <!-- =====================================
+                     PRODUCTION
+                ====================================== -->
 
                 <section
                     class="page"
@@ -428,7 +490,9 @@
                 </section>
 
 
-                <!-- History -->
+                <!-- =====================================
+                     HISTORY
+                ====================================== -->
 
                 <section
                     class="page"
@@ -460,6 +524,7 @@
 
                 </section>
 
+
             </main>
 
         </div>
@@ -467,7 +532,9 @@
     </div>
 
 
-    <!-- JavaScript -->
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
 
     <script src="js/utils.js"></script>
     <script src="js/data.js"></script>
@@ -483,3 +550,4 @@
 </body>
 
 </html>
+```
