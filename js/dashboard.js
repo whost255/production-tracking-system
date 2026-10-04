@@ -6,7 +6,6 @@ const Dashboard = {
         const selectedProjectId =
             App.currentProjectId;
 
-
         const filteredProjects =
             selectedProjectId
                 ? DataStore.projects.filter(
@@ -15,7 +14,6 @@ const Dashboard = {
                         selectedProjectId
                 )
                 : DataStore.projects;
-
 
         const filteredSets =
             selectedProjectId
@@ -26,7 +24,6 @@ const Dashboard = {
                 )
                 : DataStore.sets;
 
-
         const filteredPanels =
             selectedProjectId
                 ? DataStore.panels.filter(
@@ -35,7 +32,6 @@ const Dashboard = {
                         selectedProjectId
                 )
                 : DataStore.panels;
-
 
         const filteredProduction =
             selectedProjectId
@@ -46,29 +42,23 @@ const Dashboard = {
                 )
                 : DataStore.production;
 
-
         const totalProjects =
             filteredProjects.length;
-
 
         const totalSets =
             filteredSets.length;
 
-
         const totalPanels =
             filteredPanels.length;
 
-
         const totalProductionRecords =
             filteredProduction.length;
-
 
         const completedProductionRecords =
             filteredProduction.filter(
                 record =>
                     record.status === "Completed"
             ).length;
-
 
         const overallProgress =
             totalProductionRecords > 0
@@ -79,7 +69,6 @@ const Dashboard = {
                     ) * 100
                 )
                 : 0;
-
 
         return {
 
@@ -109,123 +98,125 @@ const Dashboard = {
 
     getStatusSummary() {
 
-    const selectedProjectId =
-        App.currentProjectId;
+        const selectedProjectId =
+            App.currentProjectId;
 
-    const records =
-        selectedProjectId
-            ? DataStore.production.filter(
-                record =>
-                    record.projectId ===
-                    selectedProjectId
-            )
-            : DataStore.production;
+        const records =
+            selectedProjectId
+                ? DataStore.production.filter(
+                    record =>
+                        record.projectId ===
+                        selectedProjectId
+                )
+                : DataStore.production;
 
-    const summary = {};
+        const summary = {};
 
-    records.forEach(
-        record => {
+        records.forEach(
+            record => {
 
-            const status =
-                record.status || "Unknown";
+                const status =
+                    record.status || "Unknown";
 
-            if (!summary[status]) {
+                if (!summary[status]) {
 
-                summary[status] = 0;
+                    summary[status] = 0;
 
-            }
+                }
 
-            summary[status]++;
-
-        }
-    );
-
-    return summary;
-
-},
-
-   getStageSummary() {
-
-    const selectedProjectId =
-        App.currentProjectId;
-
-    const records =
-        selectedProjectId
-            ? DataStore.production.filter(
-                record =>
-                    record.projectId ===
-                    selectedProjectId
-            )
-            : DataStore.production;
-
-    const summary = {};
-
-    records.forEach(
-        record => {
-
-            const stage =
-                DataStore.getStageById(
-                    record.stageId
-                );
-
-            if (!stage) {
-
-                return;
+                summary[status]++;
 
             }
+        );
 
-            if (!summary[stage.id]) {
+        return summary;
 
-                summary[stage.id] = {
+    },
 
-                    stageId:
-                        stage.id,
 
-                    stageName:
-                        stage.name,
+    getStageSummary() {
 
-                    total: 0,
+        const selectedProjectId =
+            App.currentProjectId;
 
-                    completed: 0,
+        const records =
+            selectedProjectId
+                ? DataStore.production.filter(
+                    record =>
+                        record.projectId ===
+                        selectedProjectId
+                )
+                : DataStore.production;
 
-                    progress: 0
+        const summary = {};
 
-                };
+        records.forEach(
+            record => {
+
+                const stage =
+                    DataStore.getStageById(
+                        record.stageId
+                    );
+
+                if (!stage) {
+
+                    return;
+
+                }
+
+                if (!summary[stage.id]) {
+
+                    summary[stage.id] = {
+
+                        stageId:
+                            stage.id,
+
+                        stageName:
+                            stage.name,
+
+                        total: 0,
+
+                        completed: 0,
+
+                        progress: 0
+
+                    };
+
+                }
+
+                summary[stage.id].total++;
+
+                if (
+                    record.status === "Completed"
+                ) {
+
+                    summary[stage.id].completed++;
+
+                }
 
             }
+        );
 
-            summary[stage.id].total++;
+        Object.values(summary).forEach(
+            stage => {
 
-            if (
-                record.status === "Completed"
-            ) {
-
-                summary[stage.id].completed++;
+                stage.progress =
+                    stage.total > 0
+                        ? Math.round(
+                            (
+                                stage.completed /
+                                stage.total
+                            ) * 100
+                        )
+                        : 0;
 
             }
+        );
 
-        }
-    );
+        return summary;
 
-    Object.values(summary).forEach(
-        stage => {
+    },
 
-            stage.progress =
-                stage.total > 0
-                    ? Math.round(
-                        (
-                            stage.completed /
-                            stage.total
-                        ) * 100
-                    )
-                    : 0;
-
-        }
-    );
-
-    return summary;
-
-},
 
     getProjectProgress(projectId) {
 
@@ -388,91 +379,91 @@ const Dashboard = {
 
     renderProjectProgress() {
 
-    const container =
-        document.getElementById(
-            "projectProgress"
-        );
+        const container =
+            document.getElementById(
+                "projectProgress"
+            );
 
-    if (!container) {
+        if (!container) {
 
-        return;
+            return;
 
-    }
+        }
 
-    const selectedProjectId =
-        App.currentProjectId;
+        const selectedProjectId =
+            App.currentProjectId;
 
-    const projects =
-        selectedProjectId
-            ? DataStore.projects.filter(
-                project =>
-                    project.id ===
-                    selectedProjectId
-            )
-            : DataStore.projects;
+        const projects =
+            selectedProjectId
+                ? DataStore.projects.filter(
+                    project =>
+                        project.id ===
+                        selectedProjectId
+                )
+                : DataStore.projects;
 
-    if (projects.length === 0) {
+        if (projects.length === 0) {
 
-        container.innerHTML = `
-            <div class="empty-state">
+            container.innerHTML = `
+                <div class="empty-state">
 
-                <div class="empty-state-title">
-                    No projects
-                </div>
-
-                <div class="empty-state-text">
-                    No projects are available.
-                </div>
-
-            </div>
-        `;
-
-        return;
-
-    }
-
-    container.innerHTML =
-        projects.map(project => {
-
-            const progress =
-                this.getProjectProgress(
-                    project.id
-                );
-
-            return `
-                <div class="project-progress-row">
-
-                    <div class="project-progress-info">
-
-                        <div class="project-progress-name">
-                            ${project.projectName}
-                        </div>
-
-                        <div class="project-progress-code">
-                            ${project.projectCode}
-                        </div>
-
+                    <div class="empty-state-title">
+                        No projects
                     </div>
 
-                    <div class="project-progress-bar-container">
-
-                        <div
-                            class="project-progress-bar"
-                            style="width: ${progress}%"
-                        ></div>
-
-                    </div>
-
-                    <div class="project-progress-value">
-                        ${progress}%
+                    <div class="empty-state-text">
+                        No projects are available.
                     </div>
 
                 </div>
             `;
 
-        }).join("");
+            return;
 
-},
+        }
+
+        container.innerHTML =
+            projects.map(project => {
+
+                const progress =
+                    this.getProjectProgress(
+                        project.id
+                    );
+
+                return `
+                    <div class="project-progress-row">
+
+                        <div class="project-progress-info">
+
+                            <div class="project-progress-name">
+                                ${project.projectName}
+                            </div>
+
+                            <div class="project-progress-code">
+                                ${project.projectCode}
+                            </div>
+
+                        </div>
+
+                        <div class="project-progress-bar-container">
+
+                            <div
+                                class="project-progress-bar"
+                                style="width: ${progress}%"
+                            ></div>
+
+                        </div>
+
+                        <div class="project-progress-value">
+                            ${progress}%
+                        </div>
+
+                    </div>
+                `;
+
+            }).join("");
+
+    },
 
 
     renderProjectFilter() {
@@ -578,7 +569,6 @@ const Dashboard = {
         const kpiData =
             this.getKPIData();
 
-
         const totalProjects =
             document.getElementById(
                 "kpiTotalProjects"
@@ -609,14 +599,12 @@ const Dashboard = {
                 "kpiOverallProgress"
             );
 
-
         if (totalProjects) {
 
             totalProjects.textContent =
                 kpiData.totalProjects;
 
         }
-
 
         if (totalSets) {
 
@@ -625,14 +613,12 @@ const Dashboard = {
 
         }
 
-
         if (totalPanels) {
 
             totalPanels.textContent =
                 kpiData.totalPanels;
 
         }
-
 
         if (totalProduction) {
 
@@ -641,7 +627,6 @@ const Dashboard = {
 
         }
 
-
         if (completedProduction) {
 
             completedProduction.textContent =
@@ -649,14 +634,12 @@ const Dashboard = {
 
         }
 
-
         if (overallProgress) {
 
             overallProgress.textContent =
                 `${kpiData.overallProgress}%`;
 
         }
-
 
         this.renderStatusDistribution();
 
@@ -672,3 +655,23 @@ const Dashboard = {
 
 };
 ```
+
+### Now reload
+
+After replacing the entire file:
+
+1. Save the file.
+2. Reload the site.
+3. Open **F12 → Console**.
+4. Confirm there are **no red `SyntaxError` messages**.
+5. Confirm the loading screen disappears.
+
+Then run:
+
+```javascript
+Dashboard.getProjectProgress("PRJ-001")
+```
+
+Send me what you get.
+
+**Do not commit yet.**
