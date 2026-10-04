@@ -182,7 +182,69 @@ getStageSummary() {
 
     },
 
+renderStageSummary() {
 
+    const container =
+        document.getElementById(
+            "stageSummary"
+        );
+
+    if (!container) {
+
+        return;
+
+    }
+
+    const summary =
+        this.getStageSummary();
+
+    const stages =
+        Object.values(summary);
+
+    if (stages.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty-state">
+
+                <div class="empty-state-title">
+                    No production data
+                </div>
+
+                <div class="empty-state-text">
+                    No production stage records are available.
+                </div>
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML =
+        stages.map(stage => {
+
+            return `
+                <div class="stage-summary-row">
+
+                    <div class="stage-summary-name">
+                        ${stage.stageName}
+                    </div>
+
+                    <div class="stage-summary-total">
+                        Total: ${stage.total}
+                    </div>
+
+                    <div class="stage-summary-completed">
+                        Completed: ${stage.completed}
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+},
     render() {
 
         const kpiData =
@@ -269,6 +331,7 @@ getStageSummary() {
 
 
         this.renderStatusDistribution();
+        this.renderStageSummary();
 
     }
 
