@@ -5,16 +5,17 @@ const Production = {
      * PRODUCTION MONITORING
      * ============================================================
      *
+     * Structure:
      * Project → Set → Panel → Stage → Status
      *
      * Current features:
-     * - Production record loading
      * - Project filter
      * - Set filter
      * - Panel filter
      * - Stage filter
      * - Reset filters
-     * - Production table rendering
+     * - Panel-based production table
+     * - Stage-wise status display
      * - Status badges
      *
      * ============================================================
@@ -162,6 +163,28 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
+     * GET ACTIVE STAGES
+     * ------------------------------------------------------------
+     */
+
+    getStages() {
+
+        return (
+            DataStore.stages || []
+        )
+        .filter(stage =>
+            stage.active !== false
+        )
+        .sort(
+            (a, b) =>
+                a.sequence - b.sequence
+        );
+
+    },
+
+
+    /*
+     * ------------------------------------------------------------
      * GET STATUS CLASS
      * ------------------------------------------------------------
      */
@@ -196,6 +219,7 @@ const Production = {
 
         };
 
+
         return (
             statusClasses[status] ||
             "status-pending"
@@ -216,18 +240,23 @@ const Production = {
 
             return (
                 '<span class="status-badge status-pending">' +
-                    'Unknown' +
+                    'Pending' +
                 '</span>'
             );
 
         }
 
+
         return (
+
             '<span class="status-badge ' +
                 this.getStatusClass(status) +
             '">' +
+
                 status +
+
             '</span>'
+
         );
 
     },
@@ -235,20 +264,111 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * GET FILTERED PROJECTS
+     * GET PRODUCTION RECORD
      * ------------------------------------------------------------
      */
 
-    getFilterProjects() {
+    getProductionRecord(
+        panelId,
+        stageId
+    ) {
 
-        return DataStore.projects || [];
+        return DataStore.getProductionRecord(
+            panelId,
+            stageId
+        );
 
     },
 
 
     /*
      * ------------------------------------------------------------
-     * GET FILTERED SETS
+     * GET PANELS FROM RECORDS
+     * ------------------------------------------------------------
+     */
+
+    getPanelRows() {
+
+        const records =
+            this.getRecords();
+
+
+        const panelMap =
+            new Map();
+
+
+        records.forEach(record => {
+
+            if (!panelMap.has(record.panelId)) {
+
+                panelMap.set(
+                    record.panelId,
+                    record
+                );
+
+            }
+
+        });
+
+
+        return Array.from(
+            panelMap.values()
+        );
+
+    },
+
+
+    /*
+     * ------------------------------------------------------------
+     * GET STAGE STATUS FOR PANEL
+     * ------------------------------------------------------------
+     */
+
+    getStageStatus(
+        panelId,
+        stageId
+    ) {
+
+        const record =
+            this.getProductionRecord(
+                panelId,
+                stageId
+            );
+
+
+        if (!record) {
+
+            return "Pending";
+
+        }
+
+
+        return (
+            record.status ||
+            "Pending"
+        );
+
+    },
+
+
+    /*
+     * ------------------------------------------------------------
+     * GET FILTER PROJECTS
+     * ------------------------------------------------------------
+     */
+
+    getFilterProjects() {
+
+        return (
+            DataStore.projects || []
+        );
+
+    },
+
+
+    /*
+     * ------------------------------------------------------------
+     * GET FILTER SETS
      * ------------------------------------------------------------
      */
 
@@ -277,7 +397,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * GET FILTERED PANELS
+     * GET FILTER PANELS
      * ------------------------------------------------------------
      */
 
@@ -312,28 +432,6 @@ const Production = {
 
 
         return panels;
-
-    },
-
-
-    /*
-     * ------------------------------------------------------------
-     * GET FILTER STAGES
-     * ------------------------------------------------------------
-     */
-
-    getFilterStages() {
-
-        return (
-            DataStore.stages || []
-        )
-        .filter(stage =>
-            stage.active !== false
-        )
-        .sort(
-            (a, b) =>
-                a.sequence - b.sequence
-        );
 
     },
 
@@ -384,7 +482,10 @@ const Production = {
          */
 
         projectSelect.innerHTML =
-            '<option value="">All Projects</option>' +
+
+            '<option value="">' +
+                'All Projects' +
+            '</option>' +
 
             this.getFilterProjects()
                 .map(project =>
@@ -412,7 +513,10 @@ const Production = {
          */
 
         setSelect.innerHTML =
-            '<option value="">All Sets</option>' +
+
+            '<option value="">' +
+                'All Sets' +
+            '</option>' +
 
             this.getFilterSets()
                 .map(set =>
@@ -438,7 +542,10 @@ const Production = {
          */
 
         panelSelect.innerHTML =
-            '<option value="">All Panels</option>' +
+
+            '<option value="">' +
+                'All Panels' +
+            '</option>' +
 
             this.getFilterPanels()
                 .map(panel =>
@@ -466,9 +573,12 @@ const Production = {
          */
 
         stageSelect.innerHTML =
-            '<option value="">All Stages</option>' +
 
-            this.getFilterStages()
+            '<option value="">' +
+                'All Stages' +
+            '</option>' +
+
+            this.getStages()
                 .map(stage =>
 
                     '<option value="' +
@@ -538,7 +648,7 @@ const Production = {
 
 
         /*
-         * PROJECT CHANGE
+         * PROJECT
          */
 
         projectSelect.onchange = () => {
@@ -550,16 +660,14 @@ const Production = {
             this.filters.panelId = "";
 
             this.renderFilterOptions();
-
             this.renderTable();
-
             this.updateRecordCount();
 
         };
 
 
         /*
-         * SET CHANGE
+         * SET
          */
 
         setSelect.onchange = () => {
@@ -570,16 +678,14 @@ const Production = {
             this.filters.panelId = "";
 
             this.renderFilterOptions();
-
             this.renderTable();
-
             this.updateRecordCount();
 
         };
 
 
         /*
-         * PANEL CHANGE
+         * PANEL
          */
 
         panelSelect.onchange = () => {
@@ -588,14 +694,13 @@ const Production = {
                 panelSelect.value;
 
             this.renderTable();
-
             this.updateRecordCount();
 
         };
 
 
         /*
-         * STAGE CHANGE
+         * STAGE
          */
 
         stageSelect.onchange = () => {
@@ -604,7 +709,6 @@ const Production = {
                 stageSelect.value;
 
             this.renderTable();
-
             this.updateRecordCount();
 
         };
@@ -646,9 +750,7 @@ const Production = {
 
 
         this.renderFilterOptions();
-
         this.renderTable();
-
         this.updateRecordCount();
 
     },
@@ -667,6 +769,7 @@ const Production = {
                 "productionRecordCount"
             );
 
+
         if (!countElement) {
 
             return;
@@ -675,15 +778,17 @@ const Production = {
 
 
         const count =
-            this.getRecords().length;
+            this.getPanelRows().length;
 
 
         countElement.textContent =
+
             count +
+
             (
                 count === 1
-                    ? " record"
-                    : " records"
+                    ? " panel"
+                    : " panels"
             );
 
     },
@@ -691,113 +796,133 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * CREATE PRODUCTION ROW
+     * CREATE PANEL ROW
      * ------------------------------------------------------------
      */
 
-    createRow(record) {
-
-        const project =
-            this.getProject(
-                record.projectId
-            );
-
-        const set =
-            this.getSet(
-                record.setId
-            );
+    createPanelRow(panelRecord) {
 
         const panel =
             this.getPanel(
-                record.panelId
-            );
-
-        const stage =
-            this.getStage(
-                record.stageId
+                panelRecord.panelId
             );
 
 
-        return (
-
-            '<tr>' +
-
-                '<td>' +
-
-                    (
-                        project
-                            ? project.projectCode
-                            : '-'
-                    ) +
-
-                '</td>' +
+        const project =
+            this.getProject(
+                panelRecord.projectId
+            );
 
 
-                '<td>' +
-
-                    (
-                        set
-                            ? set.setName
-                            : '-'
-                    ) +
-
-                '</td>' +
+        const set =
+            this.getSet(
+                panelRecord.setId
+            );
 
 
-                '<td>' +
+        if (!panel) {
 
-                    (
-                        panel
-                            ? panel.panelName
-                            : '-'
-                    ) +
+            return "";
 
-                '</td>' +
+        }
 
 
-                '<td>' +
-
-                    (
-                        stage
-                            ? stage.name
-                            : '-'
-                    ) +
-
-                '</td>' +
+        let row = "";
 
 
-                '<td>' +
-
-                    this.createStatusBadge(
-                        record.status
-                    ) +
-
-                '</td>' +
+        row += "<tr>";
 
 
-                '<td>' +
+        /*
+         * PROJECT
+         */
 
-                    (
-                        record.remarks ||
-                        '-'
-                    ) +
+        row +=
 
-                '</td>' +
+            "<td>" +
 
+                (
+                    project
+                        ? project.projectCode
+                        : "-"
+                ) +
 
-                '<td>' +
-
-                    (
-                        record.updatedAt ||
-                        '-'
-                    ) +
-
-                '</td>' +
+            "</td>";
 
 
-            '</tr>'
+        /*
+         * SET
+         */
 
-        );
+        row +=
+
+            "<td>" +
+
+                (
+                    set
+                        ? set.setName
+                        : "-"
+                ) +
+
+            "</td>";
+
+
+        /*
+         * PANEL
+         */
+
+        row +=
+
+            "<td>" +
+
+                "<strong>" +
+
+                    panel.panelName +
+
+                "</strong>" +
+
+                (
+                    panel.panelCode
+                        ? "<div class=\"table-secondary-text\">" +
+                            panel.panelCode +
+                          "</div>"
+                        : ""
+                ) +
+
+            "</td>";
+
+
+        /*
+         * STAGES
+         */
+
+        this.getStages()
+            .forEach(stage => {
+
+                const status =
+                    this.getStageStatus(
+                        panel.id,
+                        stage.id
+                    );
+
+
+                row +=
+
+                    "<td>" +
+
+                        this.createStatusBadge(
+                            status
+                        ) +
+
+                    "</td>";
+
+            });
+
+
+        row += "</tr>";
+
+
+        return row;
 
     },
 
@@ -810,39 +935,98 @@ const Production = {
 
     renderTable() {
 
+        const table =
+            document.getElementById(
+                "productionTable"
+            );
+
+        const thead =
+            document.getElementById(
+                "productionTableHead"
+            );
+
         const tbody =
             document.getElementById(
                 "productionTableBody"
             );
 
 
-        if (!tbody) {
+        if (
+            !table ||
+            !thead ||
+            !tbody
+        ) {
 
             return;
 
         }
 
 
-        const records =
-            this.getRecords();
+        const stages =
+            this.getStages();
 
 
-        if (records.length === 0) {
+        const panels =
+            this.getPanelRows();
+
+
+        /*
+         * HEADER
+         */
+
+        let headerHtml =
+
+            "<tr>" +
+
+                "<th>Project</th>" +
+
+                "<th>Set</th>" +
+
+                "<th>Panel</th>";
+
+
+        stages.forEach(stage => {
+
+            headerHtml +=
+
+                "<th>" +
+
+                    stage.name +
+
+                "</th>";
+
+        });
+
+
+        headerHtml += "</tr>";
+
+
+        thead.innerHTML =
+            headerHtml;
+
+
+        /*
+         * BODY
+         */
+
+        if (panels.length === 0) {
 
             tbody.innerHTML =
 
-                '<tr>' +
+                "<tr>" +
 
-                    '<td ' +
-                        'colspan="7" ' +
-                        'class="text-center"' +
-                    '>' +
+                    "<td " +
+                        "colspan=\"" +
+                            (3 + stages.length) +
+                        "\" " +
+                        "class=\"text-center\"" +
+                    ">" +
 
-                        'No production records match the selected filters.' +
+                        "No production records match the selected filters." +
 
-                    '</td>' +
+                    "</td>" +
 
-                '</tr>';
+                "</tr>";
 
             return;
 
@@ -850,9 +1034,12 @@ const Production = {
 
 
         tbody.innerHTML =
-            records
-                .map(record =>
-                    this.createRow(record)
+
+            panels
+                .map(panel =>
+                    this.createPanelRow(
+                        panel
+                    )
                 )
                 .join("");
 
@@ -880,11 +1067,15 @@ const Production = {
         }
 
 
-        const records =
-            this.getRecords();
+        const stages =
+            this.getStages();
 
 
-        let html = '';
+        const panelCount =
+            this.getPanelRows().length;
+
+
+        let html = "";
 
 
         /*
@@ -927,7 +1118,7 @@ const Production = {
                         '</h2>' +
 
                         '<p class="card-subtitle">' +
-                            'Filter production records by project, set, panel or stage.' +
+                            'Filter production monitoring by project, set, panel or stage.' +
                         '</p>' +
 
                     '</div>' +
@@ -1068,14 +1259,14 @@ const Production = {
 
         html +=
 
-            '<div class="card">' +
+            '<div class="card production-table-card">' +
 
                 '<div class="card-header">' +
 
                     '<div>' +
 
                         '<h2 class="card-title">' +
-                            'Production Records' +
+                            'Production Status' +
                         '</h2>' +
 
                         '<p ' +
@@ -1083,11 +1274,12 @@ const Production = {
                             'id="productionRecordCount"' +
                         '>' +
 
-                            records.length +
+                            panelCount +
+
                             (
-                                records.length === 1
-                                    ? ' record'
-                                    : ' records'
+                                panelCount === 1
+                                    ? " panel"
+                                    : " panels"
                             ) +
 
                         '</p>' +
@@ -1099,32 +1291,19 @@ const Production = {
 
                 '<div class="table-container">' +
 
-                    '<table class="data-table">' +
+                    '<table ' +
+                        'class="data-table production-table" ' +
+                        'id="productionTable"' +
+                    '>' +
 
-                        '<thead>' +
-
-                            '<tr>' +
-
-                                '<th>Project</th>' +
-
-                                '<th>Set</th>' +
-
-                                '<th>Panel</th>' +
-
-                                '<th>Stage</th>' +
-
-                                '<th>Status</th>' +
-
-                                '<th>Remarks</th>' +
-
-                                '<th>Last Updated</th>' +
-
-                            '</tr>' +
-
+                        '<thead ' +
+                            'id="productionTableHead"' +
+                        '>' +
                         '</thead>' +
 
-
-                        '<tbody id="productionTableBody">' +
+                        '<tbody ' +
+                            'id="productionTableBody"' +
+                        '>' +
                         '</tbody>' +
 
                     '</table>' +
@@ -1139,7 +1318,7 @@ const Production = {
 
 
         /*
-         * INITIALIZE FILTERS
+         * INITIALIZE
          */
 
         this.renderFilterOptions();
