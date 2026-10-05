@@ -8,29 +8,53 @@ const Production = {
      * Structure:
      * Project → Set → Panel → Stage → Status
      *
-     * Current features:
-     * - Project / Set / Panel / Stage filters
-     * - Stage-centric production table
-     * - Individual stage status editing
-     * - Stage-specific status validation
-     * - Remarks
-     * - Production history through DataStore
-     *
      * ============================================================
      */
 
-
-    /*
-     * ------------------------------------------------------------
-     * FILTER STATE
-     * ------------------------------------------------------------
-     */
 
     filters: {
         projectId: "",
         setId: "",
         panelId: "",
         stageId: ""
+    },
+
+
+    /*
+     * ------------------------------------------------------------
+     * ENSURE PRODUCTION RECORDS
+     * ------------------------------------------------------------
+     *
+     * Makes sure every panel has a production record
+     * for every active stage.
+     *
+     * This prevents "Production record not found"
+     * when editing a stage that did not previously exist.
+     */
+
+    ensureProductionRecords() {
+
+        const panels =
+            DataStore.panels || [];
+
+        const stages =
+            this.getStages();
+
+
+        panels.forEach(panel => {
+
+            stages.forEach(stage => {
+
+                DataStore.generateProductionRecords(
+                    panel.projectId,
+                    panel.setId,
+                    panel.id
+                );
+
+            });
+
+        });
+
     },
 
 
@@ -170,8 +194,9 @@ const Production = {
         return (
             DataStore.stages || []
         )
-        .filter(stage =>
-            stage.active !== false
+        .filter(
+            stage =>
+                stage.active !== false
         )
         .sort(
             (a, b) =>
@@ -234,11 +259,9 @@ const Production = {
 
     createStatusBadge(status) {
 
-        if (!status) {
-
-            status = "Pending";
-
-        }
+        status =
+            status ||
+            "Pending";
 
 
         return (
@@ -277,7 +300,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * GET PANELS FROM RECORDS
+     * GET PANEL ROWS
      * ------------------------------------------------------------
      */
 
@@ -293,7 +316,11 @@ const Production = {
 
         records.forEach(record => {
 
-            if (!panelMap.has(record.panelId)) {
+            if (
+                !panelMap.has(
+                    record.panelId
+                )
+            ) {
 
                 panelMap.set(
                     record.panelId,
@@ -347,7 +374,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * GET FILTER PROJECTS
+     * FILTER PROJECTS
      * ------------------------------------------------------------
      */
 
@@ -362,7 +389,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * GET FILTER SETS
+     * FILTER SETS
      * ------------------------------------------------------------
      */
 
@@ -391,7 +418,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * GET FILTER PANELS
+     * FILTER PANELS
      * ------------------------------------------------------------
      */
 
@@ -581,7 +608,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * SETUP FILTER EVENTS
+     * SETUP FILTERS
      * ------------------------------------------------------------
      */
 
@@ -754,7 +781,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * CREATE EDITABLE STAGE CELL
+     * CREATE STAGE CELL
      * ------------------------------------------------------------
      */
 
@@ -837,10 +864,6 @@ const Production = {
         let row = "<tr>";
 
 
-        /*
-         * PROJECT
-         */
-
         row +=
 
             "<td>" +
@@ -854,10 +877,6 @@ const Production = {
             "</td>";
 
 
-        /*
-         * SET
-         */
-
         row +=
 
             "<td>" +
@@ -870,10 +889,6 @@ const Production = {
 
             "</td>";
 
-
-        /*
-         * PANEL
-         */
 
         row +=
 
@@ -893,10 +908,6 @@ const Production = {
 
             "</td>";
 
-
-        /*
-         * STAGES
-         */
 
         this.getStages()
             .forEach(stage => {
@@ -920,7 +931,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * RENDER PRODUCTION TABLE
+     * RENDER TABLE
      * ------------------------------------------------------------
      */
 
@@ -961,10 +972,6 @@ const Production = {
             this.getPanelRows();
 
 
-        /*
-         * HEADER
-         */
-
         let headerHtml =
 
             "<tr>" +
@@ -993,10 +1000,6 @@ const Production = {
         thead.innerHTML =
             headerHtml;
 
-
-        /*
-         * BODY
-         */
 
         if (panels.length === 0) {
 
@@ -1040,7 +1043,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * SETUP STAGE CELL EVENTS
+     * STAGE CELL EVENTS
      * ------------------------------------------------------------
      */
 
@@ -1056,16 +1059,12 @@ const Production = {
 
             cell.onclick = () => {
 
-                const panelId =
-                    cell.dataset.panelId;
-
-                const stageId =
-                    cell.dataset.stageId;
-
-
                 this.openStageEditor(
-                    panelId,
-                    stageId
+
+                    cell.dataset.panelId,
+
+                    cell.dataset.stageId
+
                 );
 
             };
@@ -1129,16 +1128,8 @@ const Production = {
                 : "";
 
 
-        /*
-         * REMOVE EXISTING MODAL
-         */
-
         this.closeStageEditor();
 
-
-        /*
-         * CREATE MODAL
-         */
 
         const modal =
             document.createElement(
@@ -1154,19 +1145,11 @@ const Production = {
             "modal-overlay";
 
 
-        /*
-         * STATUS OPTIONS
-         */
-
         const statusOptions =
             Array.isArray(stage.statuses)
                 ? stage.statuses
                 : [];
 
-
-        /*
-         * MODAL HTML
-         */
 
         modal.innerHTML =
 
@@ -1183,9 +1166,7 @@ const Production = {
                         '<p class="modal-subtitle">' +
 
                             stage.name +
-
                             ' — ' +
-
                             panel.panelName +
 
                         '</p>' +
@@ -1207,11 +1188,6 @@ const Production = {
 
                 '<div class="modal-body">' +
 
-
-                    /*
-                     * PANEL
-                     */
-
                     '<div class="form-group">' +
 
                         '<label class="form-label">' +
@@ -1229,10 +1205,6 @@ const Production = {
 
                     '</div>' +
 
-
-                    /*
-                     * STAGE
-                     */
 
                     '<div class="form-group">' +
 
@@ -1252,10 +1224,6 @@ const Production = {
                     '</div>' +
 
 
-                    /*
-                     * STATUS
-                     */
-
                     '<div class="form-group">' +
 
                         '<label class="form-label">' +
@@ -1271,7 +1239,6 @@ const Production = {
                                 .map(status =>
 
                                     '<option ' +
-
                                         'value="' +
                                             status +
                                         '" ' +
@@ -1297,10 +1264,6 @@ const Production = {
                     '</div>' +
 
 
-                    /*
-                     * REMARKS
-                     */
-
                     '<div class="form-group">' +
 
                         '<label class="form-label">' +
@@ -1319,7 +1282,6 @@ const Production = {
                         '</textarea>' +
 
                     '</div>' +
-
 
                 '</div>' +
 
@@ -1356,10 +1318,6 @@ const Production = {
         );
 
 
-        /*
-         * CLOSE BUTTON
-         */
-
         document
             .getElementById(
                 "productionModalClose"
@@ -1371,10 +1329,6 @@ const Production = {
             };
 
 
-        /*
-         * CANCEL BUTTON
-         */
-
         document
             .getElementById(
                 "productionModalCancel"
@@ -1385,10 +1339,6 @@ const Production = {
 
             };
 
-
-        /*
-         * SAVE BUTTON
-         */
 
         document
             .getElementById(
@@ -1403,10 +1353,6 @@ const Production = {
 
             };
 
-
-        /*
-         * CLOSE ON OVERLAY CLICK
-         */
 
         modal.onclick = event => {
 
@@ -1464,19 +1410,6 @@ const Production = {
             remarksInput.value.trim();
 
 
-        const stage =
-            this.getStage(
-                stageId
-            );
-
-
-        if (!stage) {
-
-            return;
-
-        }
-
-
         try {
 
             DataStore.updateProductionStatus(
@@ -1496,19 +1429,10 @@ const Production = {
 
             this.closeStageEditor();
 
-
-            /*
-             * RE-RENDER TABLE
-             */
-
             this.renderTable();
 
             this.updateRecordCount();
 
-
-            /*
-             * SHOW SUCCESS MESSAGE
-             */
 
             if (
                 typeof Utils !== "undefined" &&
@@ -1543,7 +1467,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * CLOSE STAGE EDITOR
+     * CLOSE EDITOR
      * ------------------------------------------------------------
      */
 
@@ -1585,16 +1509,21 @@ const Production = {
         }
 
 
+        /*
+         * IMPORTANT:
+         * Create missing panel-stage records before
+         * rendering the production table.
+         */
+
+        this.ensureProductionRecords();
+
+
         const panelCount =
             this.getPanelRows().length;
 
 
         let html = "";
 
-
-        /*
-         * PAGE HEADER
-         */
 
         html +=
 
@@ -1614,10 +1543,6 @@ const Production = {
 
             '</div>';
 
-
-        /*
-         * FILTER CARD
-         */
 
         html +=
 
@@ -1641,7 +1566,6 @@ const Production = {
 
 
                 '<div class="filter-grid">' +
-
 
                     '<div class="form-group">' +
 
@@ -1741,15 +1665,10 @@ const Production = {
 
                     '</div>' +
 
-
                 '</div>' +
 
             '</div>';
 
-
-        /*
-         * PRODUCTION TABLE
-         */
 
         html +=
 
@@ -1810,10 +1729,6 @@ const Production = {
         container.innerHTML =
             html;
 
-
-        /*
-         * INITIALIZE
-         */
 
         this.renderFilterOptions();
 
