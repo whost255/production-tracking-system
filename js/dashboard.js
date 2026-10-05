@@ -194,6 +194,110 @@ const Dashboard = {
     },
 
 
+    getProductionOverview() {
+
+        let records =
+            DataStore.production || [];
+
+        if (App.currentProjectId) {
+
+            records =
+                records.filter(
+                    record =>
+                        record.projectId ===
+                        App.currentProjectId
+                );
+
+        }
+
+        const overview = {
+
+            Pending: 0,
+
+            WIP: 0,
+
+            Completed: 0,
+
+            Rework: 0,
+
+            Hold: 0,
+
+            "Quality Offer": 0
+
+        };
+
+        records.forEach(record => {
+
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    overview,
+                    record.status
+                )
+            ) {
+
+                overview[record.status]++;
+
+            }
+
+        });
+
+        return overview;
+    },
+
+
+    renderProductionOverview() {
+
+        const overview =
+            this.getProductionOverview();
+
+        const elements = {
+
+            Pending:
+                document.getElementById(
+                    "productionPendingCount"
+                ),
+
+            WIP:
+                document.getElementById(
+                    "productionWipCount"
+                ),
+
+            Completed:
+                document.getElementById(
+                    "productionCompletedCount"
+                ),
+
+            Rework:
+                document.getElementById(
+                    "productionReworkCount"
+                ),
+
+            Hold:
+                document.getElementById(
+                    "productionHoldCount"
+                ),
+
+            "Quality Offer":
+                document.getElementById(
+                    "productionQualityOfferCount"
+                )
+
+        };
+
+        Object.keys(elements).forEach(status => {
+
+            if (elements[status]) {
+
+                elements[status].textContent =
+                    overview[status];
+
+            }
+
+        });
+
+    },
+
+
     renderStatusDistribution() {
 
         const container =
@@ -583,6 +687,8 @@ const Dashboard = {
         this.renderProjectProgress();
 
         this.renderProjectFilter();
+
+        this.renderProductionOverview();
 
         this.setupProjectFilter();
 
