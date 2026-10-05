@@ -624,35 +624,131 @@
                      HISTORY
                 ====================================== -->
 
-                <section
-                    class="page"
-                    id="historyPage"
-                >
+               <section
+    class="page"
+    id="historyPage"
+>
 
-                    <div class="page-header">
+    <div class="page-header">
+        <div>
+            <h1>Production History</h1>
+            <p>Track all production status changes and activities.</p>
+        </div>
+    </div>
 
-                        <div>
+    <div class="card">
 
-                            <h2>
-                                Production History
-                            </h2>
+        <div class="filter-grid">
 
-                            <p>
-                                Track production status changes and history.
-                            </p>
+            <div class="form-group">
+                <label for="historyProjectFilter">
+                    Project
+                </label>
 
-                        </div>
+                <select id="historyProjectFilter">
+                    <option value="">All Projects</option>
+                </select>
+            </div>
 
-                    </div>
+            <div class="form-group">
+                <label for="historySetFilter">
+                    Set
+                </label>
 
+                <select id="historySetFilter">
+                    <option value="">All Sets</option>
+                </select>
+            </div>
 
-                    <div class="page-placeholder">
+            <div class="form-group">
+                <label for="historyPanelFilter">
+                    Panel
+                </label>
 
-                        Production history will be developed in later phases.
+                <select id="historyPanelFilter">
+                    <option value="">All Panels</option>
+                </select>
+            </div>
 
-                    </div>
+            <div class="form-group">
+                <label for="historyStageFilter">
+                    Stage
+                </label>
 
-                </section>
+                <select id="historyStageFilter">
+                    <option value="">All Stages</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="filter-actions">
+
+            <button
+                type="button"
+                id="historyApplyFilters"
+                class="btn btn-primary"
+            >
+                Apply Filters
+            </button>
+
+            <button
+                type="button"
+                id="historyResetFilters"
+                class="btn btn-secondary"
+            >
+                Reset
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+                <h2>History Records</h2>
+            </div>
+
+            <div
+                id="historyRecordCount"
+                class="record-count"
+            >
+                0 records
+            </div>
+
+        </div>
+
+        <div class="table-container">
+
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Set</th>
+                        <th>Panel</th>
+                        <th>Stage</th>
+                        <th>Previous Status</th>
+                        <th>New Status</th>
+                        <th>Remarks</th>
+                        <th>Date / Time</th>
+                        <th>Changed By</th>
+                    </tr>
+                </thead>
+
+                <tbody id="historyTableBody">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
 
 
             </main>
