@@ -9,14 +9,12 @@ const Production = {
      * Project → Set → Panel → Stage → Status
      *
      * Current features:
-     * - Project filter
-     * - Set filter
-     * - Panel filter
-     * - Stage filter
-     * - Reset filters
-     * - Panel-based production table
-     * - Stage-wise status display
-     * - Status badges
+     * - Project / Set / Panel / Stage filters
+     * - Stage-centric production table
+     * - Individual stage status editing
+     * - Stage-specific status validation
+     * - Remarks
+     * - Production history through DataStore
      *
      * ============================================================
      */
@@ -238,11 +236,7 @@ const Production = {
 
         if (!status) {
 
-            return (
-                '<span class="status-badge status-pending">' +
-                    'Pending' +
-                '</span>'
-            );
+            status = "Pending";
 
         }
 
@@ -320,7 +314,7 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
-     * GET STAGE STATUS FOR PANEL
+     * GET STAGE STATUS
      * ------------------------------------------------------------
      */
 
@@ -477,10 +471,6 @@ const Production = {
         }
 
 
-        /*
-         * PROJECT
-         */
-
         projectSelect.innerHTML =
 
             '<option value="">' +
@@ -508,10 +498,6 @@ const Production = {
             this.filters.projectId;
 
 
-        /*
-         * SET
-         */
-
         setSelect.innerHTML =
 
             '<option value="">' +
@@ -536,10 +522,6 @@ const Production = {
         setSelect.value =
             this.filters.setId;
 
-
-        /*
-         * PANEL
-         */
 
         panelSelect.innerHTML =
 
@@ -567,10 +549,6 @@ const Production = {
         panelSelect.value =
             this.filters.panelId;
 
-
-        /*
-         * STAGE
-         */
 
         stageSelect.innerHTML =
 
@@ -647,10 +625,6 @@ const Production = {
         }
 
 
-        /*
-         * PROJECT
-         */
-
         projectSelect.onchange = () => {
 
             this.filters.projectId =
@@ -666,10 +640,6 @@ const Production = {
         };
 
 
-        /*
-         * SET
-         */
-
         setSelect.onchange = () => {
 
             this.filters.setId =
@@ -684,10 +654,6 @@ const Production = {
         };
 
 
-        /*
-         * PANEL
-         */
-
         panelSelect.onchange = () => {
 
             this.filters.panelId =
@@ -699,10 +665,6 @@ const Production = {
         };
 
 
-        /*
-         * STAGE
-         */
-
         stageSelect.onchange = () => {
 
             this.filters.stageId =
@@ -713,10 +675,6 @@ const Production = {
 
         };
 
-
-        /*
-         * RESET
-         */
 
         if (resetButton) {
 
@@ -796,6 +754,55 @@ const Production = {
 
     /*
      * ------------------------------------------------------------
+     * CREATE EDITABLE STAGE CELL
+     * ------------------------------------------------------------
+     */
+
+    createStageCell(
+        panel,
+        stage
+    ) {
+
+        const status =
+            this.getStageStatus(
+                panel.id,
+                stage.id
+            );
+
+
+        return (
+
+            '<td ' +
+
+                'class="production-stage-cell" ' +
+
+                'data-panel-id="' +
+                    panel.id +
+                '" ' +
+
+                'data-stage-id="' +
+                    stage.id +
+                '" ' +
+
+                'title="Click to edit ' +
+                    stage.name +
+                ' status"' +
+
+            '>' +
+
+                this.createStatusBadge(
+                    status
+                ) +
+
+            '</td>'
+
+        );
+
+    },
+
+
+    /*
+     * ------------------------------------------------------------
      * CREATE PANEL ROW
      * ------------------------------------------------------------
      */
@@ -827,10 +834,7 @@ const Production = {
         }
 
 
-        let row = "";
-
-
-        row += "<tr>";
+        let row = "<tr>";
 
 
         /*
@@ -876,9 +880,7 @@ const Production = {
             "<td>" +
 
                 "<strong>" +
-
                     panel.panelName +
-
                 "</strong>" +
 
                 (
@@ -899,22 +901,11 @@ const Production = {
         this.getStages()
             .forEach(stage => {
 
-                const status =
-                    this.getStageStatus(
-                        panel.id,
-                        stage.id
-                    );
-
-
                 row +=
-
-                    "<td>" +
-
-                        this.createStatusBadge(
-                            status
-                        ) +
-
-                    "</td>";
+                    this.createStageCell(
+                        panel,
+                        stage
+                    );
 
             });
 
@@ -990,9 +981,7 @@ const Production = {
             headerHtml +=
 
                 "<th>" +
-
                     stage.name +
-
                 "</th>";
 
         });
@@ -1043,6 +1032,535 @@ const Production = {
                 )
                 .join("");
 
+
+        this.setupStageCellEvents();
+
+    },
+
+
+    /*
+     * ------------------------------------------------------------
+     * SETUP STAGE CELL EVENTS
+     * ------------------------------------------------------------
+     */
+
+    setupStageCellEvents() {
+
+        const cells =
+            document.querySelectorAll(
+                ".production-stage-cell"
+            );
+
+
+        cells.forEach(cell => {
+
+            cell.onclick = () => {
+
+                const panelId =
+                    cell.dataset.panelId;
+
+                const stageId =
+                    cell.dataset.stageId;
+
+
+                this.openStageEditor(
+                    panelId,
+                    stageId
+                );
+
+            };
+
+        });
+
+    },
+
+
+    /*
+     * ------------------------------------------------------------
+     * OPEN STAGE EDITOR
+     * ------------------------------------------------------------
+     */
+
+    openStageEditor(
+        panelId,
+        stageId
+    ) {
+
+        const panel =
+            this.getPanel(
+                panelId
+            );
+
+        const stage =
+            this.getStage(
+                stageId
+            );
+
+
+        if (
+            !panel ||
+            !stage
+        ) {
+
+            return;
+
+        }
+
+
+        const record =
+            this.getProductionRecord(
+                panelId,
+                stageId
+            );
+
+
+        const currentStatus =
+            record
+                ? record.status
+                : "Pending";
+
+
+        const currentRemarks =
+            record
+                ? (
+                    record.remarks ||
+                    ""
+                )
+                : "";
+
+
+        /*
+         * REMOVE EXISTING MODAL
+         */
+
+        this.closeStageEditor();
+
+
+        /*
+         * CREATE MODAL
+         */
+
+        const modal =
+            document.createElement(
+                "div"
+            );
+
+
+        modal.id =
+            "productionStageModal";
+
+
+        modal.className =
+            "modal-overlay";
+
+
+        /*
+         * STATUS OPTIONS
+         */
+
+        const statusOptions =
+            Array.isArray(stage.statuses)
+                ? stage.statuses
+                : [];
+
+
+        /*
+         * MODAL HTML
+         */
+
+        modal.innerHTML =
+
+            '<div class="modal">' +
+
+                '<div class="modal-header">' +
+
+                    '<div>' +
+
+                        '<h2 class="modal-title">' +
+                            'Update Production Status' +
+                        '</h2>' +
+
+                        '<p class="modal-subtitle">' +
+
+                            stage.name +
+
+                            ' — ' +
+
+                            panel.panelName +
+
+                        '</p>' +
+
+                    '</div>' +
+
+                    '<button ' +
+                        'type="button" ' +
+                        'class="modal-close" ' +
+                        'id="productionModalClose"' +
+                    '>' +
+
+                        '&times;' +
+
+                    '</button>' +
+
+                '</div>' +
+
+
+                '<div class="modal-body">' +
+
+
+                    /*
+                     * PANEL
+                     */
+
+                    '<div class="form-group">' +
+
+                        '<label class="form-label">' +
+                            'Panel' +
+                        '</label>' +
+
+                        '<input ' +
+                            'type="text" ' +
+                            'class="form-control" ' +
+                            'value="' +
+                                panel.panelName +
+                            '" ' +
+                            'readonly' +
+                        '>' +
+
+                    '</div>' +
+
+
+                    /*
+                     * STAGE
+                     */
+
+                    '<div class="form-group">' +
+
+                        '<label class="form-label">' +
+                            'Stage' +
+                        '</label>' +
+
+                        '<input ' +
+                            'type="text" ' +
+                            'class="form-control" ' +
+                            'value="' +
+                                stage.name +
+                            '" ' +
+                            'readonly' +
+                        '>' +
+
+                    '</div>' +
+
+
+                    /*
+                     * STATUS
+                     */
+
+                    '<div class="form-group">' +
+
+                        '<label class="form-label">' +
+                            'Status' +
+                        '</label>' +
+
+                        '<select ' +
+                            'id="productionEditStatus" ' +
+                            'class="form-control"' +
+                        '>' +
+
+                            statusOptions
+                                .map(status =>
+
+                                    '<option ' +
+
+                                        'value="' +
+                                            status +
+                                        '" ' +
+
+                                        (
+                                            status ===
+                                            currentStatus
+                                                ? 'selected'
+                                                : ''
+                                        ) +
+
+                                    '>' +
+
+                                        status +
+
+                                    '</option>'
+
+                                )
+                                .join("") +
+
+                        '</select>' +
+
+                    '</div>' +
+
+
+                    /*
+                     * REMARKS
+                     */
+
+                    '<div class="form-group">' +
+
+                        '<label class="form-label">' +
+                            'Remarks' +
+                        '</label>' +
+
+                        '<textarea ' +
+                            'id="productionEditRemarks" ' +
+                            'class="form-control" ' +
+                            'rows="4" ' +
+                            'placeholder="Enter remarks..."' +
+                        '>' +
+
+                            currentRemarks +
+
+                        '</textarea>' +
+
+                    '</div>' +
+
+
+                '</div>' +
+
+
+                '<div class="modal-footer">' +
+
+                    '<button ' +
+                        'type="button" ' +
+                        'class="btn btn-secondary" ' +
+                        'id="productionModalCancel"' +
+                    '>' +
+
+                        'Cancel' +
+
+                    '</button>' +
+
+                    '<button ' +
+                        'type="button" ' +
+                        'class="btn btn-primary" ' +
+                        'id="productionModalSave"' +
+                    '>' +
+
+                        'Save Changes' +
+
+                    '</button>' +
+
+                '</div>' +
+
+            '</div>';
+
+
+        document.body.appendChild(
+            modal
+        );
+
+
+        /*
+         * CLOSE BUTTON
+         */
+
+        document
+            .getElementById(
+                "productionModalClose"
+            )
+            .onclick = () => {
+
+                this.closeStageEditor();
+
+            };
+
+
+        /*
+         * CANCEL BUTTON
+         */
+
+        document
+            .getElementById(
+                "productionModalCancel"
+            )
+            .onclick = () => {
+
+                this.closeStageEditor();
+
+            };
+
+
+        /*
+         * SAVE BUTTON
+         */
+
+        document
+            .getElementById(
+                "productionModalSave"
+            )
+            .onclick = () => {
+
+                this.saveStageStatus(
+                    panelId,
+                    stageId
+                );
+
+            };
+
+
+        /*
+         * CLOSE ON OVERLAY CLICK
+         */
+
+        modal.onclick = event => {
+
+            if (
+                event.target ===
+                modal
+            ) {
+
+                this.closeStageEditor();
+
+            }
+
+        };
+
+    },
+
+
+    /*
+     * ------------------------------------------------------------
+     * SAVE STAGE STATUS
+     * ------------------------------------------------------------
+     */
+
+    saveStageStatus(
+        panelId,
+        stageId
+    ) {
+
+        const statusSelect =
+            document.getElementById(
+                "productionEditStatus"
+            );
+
+        const remarksInput =
+            document.getElementById(
+                "productionEditRemarks"
+            );
+
+
+        if (
+            !statusSelect ||
+            !remarksInput
+        ) {
+
+            return;
+
+        }
+
+
+        const newStatus =
+            statusSelect.value;
+
+
+        const remarks =
+            remarksInput.value.trim();
+
+
+        const stage =
+            this.getStage(
+                stageId
+            );
+
+
+        if (!stage) {
+
+            return;
+
+        }
+
+
+        try {
+
+            DataStore.updateProductionStatus(
+
+                panelId,
+
+                stageId,
+
+                newStatus,
+
+                remarks,
+
+                "System"
+
+            );
+
+
+            this.closeStageEditor();
+
+
+            /*
+             * RE-RENDER TABLE
+             */
+
+            this.renderTable();
+
+            this.updateRecordCount();
+
+
+            /*
+             * SHOW SUCCESS MESSAGE
+             */
+
+            if (
+                typeof Utils !== "undefined" &&
+                typeof Utils.showToast === "function"
+            ) {
+
+                Utils.showToast(
+                    "Production status updated successfully.",
+                    "success"
+                );
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Production status update failed:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Unable to update production status."
+            );
+
+        }
+
+    },
+
+
+    /*
+     * ------------------------------------------------------------
+     * CLOSE STAGE EDITOR
+     * ------------------------------------------------------------
+     */
+
+    closeStageEditor() {
+
+        const modal =
+            document.getElementById(
+                "productionStageModal"
+            );
+
+
+        if (modal) {
+
+            modal.remove();
+
+        }
+
     },
 
 
@@ -1065,10 +1583,6 @@ const Production = {
             return;
 
         }
-
-
-        const stages =
-            this.getStages();
 
 
         const panelCount =
@@ -1129,10 +1643,6 @@ const Production = {
                 '<div class="filter-grid">' +
 
 
-                    /*
-                     * PROJECT
-                     */
-
                     '<div class="form-group">' +
 
                         '<label class="form-label">' +
@@ -1152,10 +1662,6 @@ const Production = {
 
                     '</div>' +
 
-
-                    /*
-                     * SET
-                     */
 
                     '<div class="form-group">' +
 
@@ -1177,10 +1683,6 @@ const Production = {
                     '</div>' +
 
 
-                    /*
-                     * PANEL
-                     */
-
                     '<div class="form-group">' +
 
                         '<label class="form-label">' +
@@ -1201,10 +1703,6 @@ const Production = {
                     '</div>' +
 
 
-                    /*
-                     * STAGE
-                     */
-
                     '<div class="form-group">' +
 
                         '<label class="form-label">' +
@@ -1224,10 +1722,6 @@ const Production = {
 
                     '</div>' +
 
-
-                    /*
-                     * RESET
-                     */
 
                     '<div class="form-group filter-action">' +
 
