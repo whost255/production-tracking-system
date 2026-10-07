@@ -196,20 +196,16 @@ const Dashboard = {
         const totalProductionRecords =
             filteredProduction.length;
 
-        const completedProductionRecords =
-            filteredProduction.filter(
-                record => record.status === "Completed"
-            ).length;
+      const progressData =
+    this.getProgressEngine(
+        selectedProjectId
+    );
 
-        const overallProgress =
-            totalProductionRecords > 0
-                ? Math.round(
-                    (
-                        completedProductionRecords /
-                        totalProductionRecords
-                    ) * 100
-                )
-                : 0;
+const completedProductionRecords =
+    progressData.completedStages;
+
+const overallProgress =
+    progressData.overallProgress;
 
         return {
             totalProjects: totalProjects,
