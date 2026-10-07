@@ -158,7 +158,67 @@ const Dashboard = {
         };
 
     },
-    
+        getSetProgress(setId) {
+
+        const set =
+            DataStore.getSetById(setId);
+
+        if (!set) {
+            return 0;
+        }
+
+        const panels =
+            DataStore.getPanelsBySet(setId);
+
+        const stages =
+            (DataStore.stages || [])
+                .filter(stage => stage.active !== false)
+                .sort(
+                    (a, b) =>
+                        a.sequence - b.sequence
+                );
+
+        const totalStageRecords =
+            panels.length *
+            stages.length;
+
+        if (totalStageRecords === 0) {
+            return 0;
+        }
+
+        let completedStages = 0;
+
+        panels.forEach(panel => {
+
+            stages.forEach(stage => {
+
+                const record =
+                    DataStore.getProductionRecord(
+                        panel.id,
+                        stage.id
+                    );
+
+                if (
+                    record &&
+                    (
+                        record.status === "Completed" ||
+                        record.status === "Quality Approved"
+                    )
+                ) {
+                    completedStages++;
+                }
+
+            });
+
+        });
+
+        return Math.round(
+            (
+                completedStages /
+                totalStageRecords
+            ) * 100
+        );
+    },
     getKPIData() {
 
         const selectedProjectId = App.currentProjectId;
