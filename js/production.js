@@ -1391,93 +1391,120 @@ const Production = {
      * ------------------------------------------------------------
      */
 
-    saveStageStatus(
-        panelId,
-        stageId
+    /*
+ * ------------------------------------------------------------
+ * SAVE STAGE STATUS
+ * ------------------------------------------------------------
+ */
+
+saveStageStatus(
+    panelId,
+    stageId
+) {
+
+    const statusSelect =
+        document.getElementById(
+            "productionEditStatus"
+        );
+
+    const remarksInput =
+        document.getElementById(
+            "productionEditRemarks"
+        );
+
+
+    if (
+        !statusSelect ||
+        !remarksInput
     ) {
 
-        const statusSelect =
-            document.getElementById(
-                "productionEditStatus"
-            );
+        return;
 
-        const remarksInput =
-            document.getElementById(
-                "productionEditRemarks"
-            );
+    }
 
+
+    const newStatus =
+        statusSelect.value;
+
+
+    const remarks =
+        remarksInput.value.trim();
+
+
+    try {
+
+        DataStore.updateProductionStatus(
+
+            panelId,
+
+            stageId,
+
+            newStatus,
+
+            remarks,
+
+            "System"
+
+        );
+
+
+        this.closeStageEditor();
+
+
+        /*
+         * If the editor was opened from Panel Detail,
+         * refresh Panel Detail instead of switching
+         * back to the Production Monitoring table.
+         */
 
         if (
-            !statusSelect ||
-            !remarksInput
+            typeof PanelDetail !== "undefined" &&
+            PanelDetail.currentPanelId === panelId &&
+            typeof PanelDetail.render === "function"
         ) {
 
-            return;
-
-        }
-
-
-        const newStatus =
-            statusSelect.value;
-
-
-        const remarks =
-            remarksInput.value.trim();
-
-
-        try {
-
-            DataStore.updateProductionStatus(
-
-                panelId,
-
-                stageId,
-
-                newStatus,
-
-                remarks,
-
-                "System"
-
+            PanelDetail.render(
+                panelId
             );
 
-
-            this.closeStageEditor();
+        } else {
 
             this.renderTable();
 
             this.updateRecordCount();
 
-
-            if (
-                typeof Utils !== "undefined" &&
-                typeof Utils.showToast === "function"
-            ) {
-
-                Utils.showToast(
-                    "Production status updated successfully.",
-                    "success"
-                );
-
-            }
+        }
 
 
-        } catch (error) {
+        if (
+            typeof Utils !== "undefined" &&
+            typeof Utils.showToast === "function"
+        ) {
 
-            console.error(
-                "Production status update failed:",
-                error
-            );
-
-
-            alert(
-                error.message ||
-                "Unable to update production status."
+            Utils.showToast(
+                "Production status updated successfully.",
+                "success"
             );
 
         }
 
-    },
+
+    } catch (error) {
+
+        console.error(
+            "Production status update failed:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to update production status."
+        );
+
+    }
+
+},
 
 
     /*
