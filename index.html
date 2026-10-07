@@ -750,7 +750,294 @@
 
 </section>
 
+<!-- =====================================
+     PANEL DETAIL
+====================================== -->
 
+<section
+    class="page"
+    id="panelDetailPage"
+>
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Panel Detail
+            </h1>
+
+            <p>
+                View complete production workflow and history for this panel.
+            </p>
+
+        </div>
+
+        <div>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="panelDetailBackBtn"
+            >
+                ← Back to Production
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         PANEL INFORMATION
+    ====================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Panel Information
+                </h2>
+
+                <p class="card-subtitle">
+                    Project, set and panel details
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="filter-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Project
+                </label>
+
+                <div
+                    id="panelDetailProject"
+                    class="panel-detail-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Set
+                </label>
+
+                <div
+                    id="panelDetailSet"
+                    class="panel-detail-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Panel Code
+                </label>
+
+                <div
+                    id="panelDetailCode"
+                    class="panel-detail-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Panel Name
+                </label>
+
+                <div
+                    id="panelDetailName"
+                    class="panel-detail-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Panel Type
+                </label>
+
+                <div
+                    id="panelDetailType"
+                    class="panel-detail-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Quantity
+                </label>
+
+                <div
+                    id="panelDetailQuantity"
+                    class="panel-detail-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         PRODUCTION WORKFLOW
+    ====================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Production Workflow
+                </h2>
+
+                <p class="card-subtitle">
+                    Current status of every production stage
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="panelDetailStages"
+            class="panel-detail-stages"
+        >
+
+            <div class="empty-state">
+
+                <div class="empty-state-title">
+                    No production data
+                </div>
+
+                <div class="empty-state-text">
+                    Select a panel to view its production workflow.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         PANEL HISTORY
+    ====================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Panel History
+                </h2>
+
+                <p class="card-subtitle">
+                    Complete status-change history for this panel
+                </p>
+
+            </div>
+
+
+            <div
+                id="panelDetailHistoryCount"
+                class="record-count"
+            >
+                0 records
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Stage
+                        </th>
+
+                        <th>
+                            Previous Status
+                        </th>
+
+                        <th>
+                            New Status
+                        </th>
+
+                        <th>
+                            Remarks
+                        </th>
+
+                        <th>
+                            Date / Time
+                        </th>
+
+                        <th>
+                            Changed By
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="panelDetailHistoryBody"
+                >
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
             </main>
 
         </div>
