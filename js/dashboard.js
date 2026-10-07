@@ -219,6 +219,32 @@ const Dashboard = {
             ) * 100
         );
     },
+
+        getAllSetProgress(projectId = null) {
+
+        let sets =
+            DataStore.sets || [];
+
+        if (projectId) {
+            sets =
+                sets.filter(
+                    set =>
+                        set.projectId === projectId
+                );
+        }
+
+        return sets.map(set => {
+
+            return {
+                setId: set.id,
+                projectId: set.projectId,
+                setNumber: set.setNumber,
+                setName: set.setName,
+                progress: this.getSetProgress(set.id)
+            };
+
+        });
+    },
     getKPIData() {
 
         const selectedProjectId = App.currentProjectId;
