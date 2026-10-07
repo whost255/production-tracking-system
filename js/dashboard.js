@@ -298,11 +298,12 @@ const overallProgress =
 
             summary[stage.id].total++;
 
-            if (record.status === "Completed") {
-
-                summary[stage.id].completed++;
-
-            }
+          if (
+    record.status === "Completed" ||
+    record.status === "Quality Approved"
+) {
+    summary[stage.id].completed++;
+}
 
         });
 
