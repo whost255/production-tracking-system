@@ -152,31 +152,33 @@ const History = {
 
     renderTable() {
 
-        const tbody =
-            document.getElementById("historyTableBody");
+    const tbody =
+        document.getElementById("historyTableBody");
 
-        if (!tbody) {
-            return;
-        }
+    if (!tbody) {
+        return;
+    }
 
-        const records = this.getFilteredRecords();
+    const records =
+        this.getFilteredRecords();
 
-        tbody.innerHTML = "";
+    tbody.innerHTML = "";
 
-        if (!records.length) {
+    if (!records.length) {
 
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="9" class="empty-state">
-                        No history records found.
-                    </td>
-                </tr>
-            `;
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9" class="empty-state">
+                    No history records found.
+                </td>
+            </tr>
+        `;
 
-            return;
-        }
+        return;
+    }
 
-        const sortedRecords = [...records].sort((a, b) => {
+    const sortedRecords =
+        [...records].sort((a, b) => {
 
             const dateA =
                 new Date(a.changedAt || 0).getTime();
@@ -187,64 +189,169 @@ const History = {
             return dateB - dateA;
         });
 
-        sortedRecords.forEach(record => {
 
-            const project =
-                this.getProject(record.projectId);
+    const escapeHtml = value => {
 
-            const set =
-                this.getSet(record.setId);
+        if (
+            value === null ||
+            value === undefined
+        ) {
+            return "";
+        }
 
-            const panel =
-                this.getPanel(record.panelId);
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
 
-            const stage =
-                this.getStage(record.stageId);
+    };
 
-            const row =
-                document.createElement("tr");
 
-            row.innerHTML = `
-                <td>
-                    ${project ? project.projectCode : "-"}
-                </td>
+    const getStatusClass = status => {
 
-                <td>
-                    ${set ? set.setName : "-"}
-                </td>
+        const statusClasses = {
 
-                <td>
-                    ${panel ? panel.panelName : "-"}
-                </td>
+            "Pending":
+                "status-pending",
 
-                <td>
-                    ${stage ? stage.name : "-"}
-                </td>
+            "WIP":
+                "status-wip",
 
-                <td>
-                    ${record.previousStatus || "-"}
-                </td>
+            "Completed":
+                "status-completed",
 
-                <td>
-                    ${record.newStatus || "-"}
-                </td>
+            "Quality Offer":
+                "status-quality-offer",
 
-                <td>
-                    ${record.remarks || "-"}
-                </td>
+            "Quality Approved":
+                "status-approved",
 
-                <td>
-                    ${this.formatDateTime(record.changedAt)}
-                </td>
+            "Quality Rejected":
+                "status-rejected",
 
-                <td>
-                    ${record.changedBy || "-"}
-                </td>
-            `;
+            "Rework":
+                "status-rework",
 
-            tbody.appendChild(row);
-        });
-    },
+            "Hold":
+                "status-hold"
+
+        };
+
+        return (
+            statusClasses[status] ||
+            "status-pending"
+        );
+
+    };
+
+
+    sortedRecords.forEach(record => {
+
+        const project =
+            this.getProject(record.projectId);
+
+        const set =
+            this.getSet(record.setId);
+
+        const panel =
+            this.getPanel(record.panelId);
+
+        const stage =
+            this.getStage(record.stageId);
+
+
+        const newStatus =
+            record.newStatus || "-";
+
+
+        const statusBadge =
+            newStatus === "-"
+                ? "-"
+                : `
+                    <span class="status-badge ${getStatusClass(newStatus)}">
+                        ${escapeHtml(newStatus)}
+                    </span>
+                `;
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                ${escapeHtml(
+                    project
+                        ? project.projectCode
+                        : "-"
+                )}
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    set
+                        ? set.setName
+                        : "-"
+                )}
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    panel
+                        ? panel.panelName
+                        : "-"
+                )}
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    stage
+                        ? stage.name
+                        : "-"
+                )}
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    record.previousStatus || "-"
+                )}
+            </td>
+
+            <td>
+                ${statusBadge}
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    record.remarks || "-"
+                )}
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    this.formatDateTime(
+                        record.changedAt
+                    )
+                )}
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    record.changedBy || "-"
+                )}
+            </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+    });
+
+},
 
     updateRecordCount() {
 
