@@ -1,5 +1,164 @@
 const Dashboard = {
 
+
+        /*
+     * ============================================================
+     * PRODUCTION PROGRESS ENGINE
+     * ============================================================
+     */
+
+    getProgressEngine(projectId = null) {
+
+        let panels =
+            DataStore.panels || [];
+
+        let stages =
+            (DataStore.stages || [])
+                .filter(stage => stage.active !== false)
+                .sort(
+                    (a, b) =>
+                        a.sequence - b.sequence
+                );
+
+
+        if (projectId) {
+
+            panels =
+                panels.filter(
+                    panel =>
+                        panel.projectId === projectId
+                );
+
+        }
+
+
+        const totalPanels =
+            panels.length;
+
+        const totalStagesPerPanel =
+            stages.length;
+
+        const totalStageRecords =
+            totalPanels *
+            totalStagesPerPanel;
+
+
+        let completedStages = 0;
+        let wipStages = 0;
+        let pendingStages = 0;
+        let reworkStages = 0;
+        let holdStages = 0;
+        let qualityOfferStages = 0;
+
+
+        panels.forEach(panel => {
+
+            stages.forEach(stage => {
+
+                const record =
+                    DataStore.getProductionRecord(
+                        panel.id,
+                        stage.id
+                    );
+
+
+                const status =
+                    record
+                        ? record.status
+                        : "Pending";
+
+
+                switch (status) {
+
+                    case "Completed":
+                    case "Quality Approved":
+
+                        completedStages++;
+
+                        break;
+
+
+                    case "WIP":
+
+                        wipStages++;
+
+                        break;
+
+
+                    case "Rework":
+
+                        reworkStages++;
+
+                        break;
+
+
+                    case "Hold":
+
+                        holdStages++;
+
+                        break;
+
+
+                    case "Quality Offer":
+                    case "Quality Rejected":
+
+                        qualityOfferStages++;
+
+                        break;
+
+
+                    case "Pending":
+
+                    default:
+
+                        pendingStages++;
+
+                        break;
+
+                }
+
+            });
+
+        });
+
+
+        const overallProgress =
+            totalStageRecords > 0
+                ? Math.round(
+                    (
+                        completedStages /
+                        totalStageRecords
+                    ) * 100
+                )
+                : 0;
+
+
+        return {
+
+            totalPanels,
+
+            totalStagesPerPanel,
+
+            totalStageRecords,
+
+            completedStages,
+
+            wipStages,
+
+            pendingStages,
+
+            reworkStages,
+
+            holdStages,
+
+            qualityOfferStages,
+
+            overallProgress
+
+        };
+
+    },
+    
     getKPIData() {
 
         const selectedProjectId = App.currentProjectId;
