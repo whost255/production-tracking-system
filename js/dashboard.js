@@ -350,21 +350,14 @@ const overallProgress =
 
         }
 
-        const overview = {
-
-            Pending: 0,
-
-            WIP: 0,
-
-            Completed: 0,
-
-            Rework: 0,
-
-            Hold: 0,
-
-            "Quality Offer": 0
-
-        };
+       const overview = {
+    Pending: 0,
+    WIP: 0,
+    Completed: 0,
+    Rework: 0,
+    Hold: 0,
+    "Quality Offer": 0
+};
 
         records.forEach(record => {
 
