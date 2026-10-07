@@ -219,7 +219,56 @@ const Dashboard = {
             ) * 100
         );
     },
+    getPanelProgress(panelId) {
 
+        const panel =
+            DataStore.getPanelById(panelId);
+
+        if (!panel) {
+            return 0;
+        }
+
+        const stages =
+            (DataStore.stages || [])
+                .filter(stage => stage.active !== false)
+                .sort(
+                    (a, b) =>
+                        a.sequence - b.sequence
+                );
+
+        if (stages.length === 0) {
+            return 0;
+        }
+
+        let completedStages = 0;
+
+        stages.forEach(stage => {
+
+            const record =
+                DataStore.getProductionRecord(
+                    panel.id,
+                    stage.id
+                );
+
+            if (
+                record &&
+                (
+                    record.status === "Completed" ||
+                    record.status === "Quality Approved"
+                )
+            ) {
+                completedStages++;
+            }
+
+        });
+
+        return Math.round(
+            (
+                completedStages /
+                stages.length
+            ) * 100
+        );
+    },
         getAllSetProgress(projectId = null) {
 
         let sets =
