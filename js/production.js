@@ -24,12 +24,6 @@ const Production = {
      * ------------------------------------------------------------
      * ENSURE PRODUCTION RECORDS
      * ------------------------------------------------------------
-     *
-     * Makes sure every panel has a production record
-     * for every active stage.
-     *
-     * This prevents "Production record not found"
-     * when editing a stage that did not previously exist.
      */
 
     ensureProductionRecords() {
@@ -890,21 +884,42 @@ const Production = {
             "</td>";
 
 
+        /*
+         * PANEL DETAIL CONNECTION
+         *
+         * Clicking the panel name opens
+         * the complete Panel Detail page.
+         */
+
         row +=
 
             "<td>" +
 
-                "<strong>" +
-                    panel.panelName +
-                "</strong>" +
+                "<button " +
 
-                (
-                    panel.panelCode
-                        ? "<div class=\"table-secondary-text\">" +
-                            panel.panelCode +
-                          "</div>"
-                        : ""
-                ) +
+                    "type=\"button\" " +
+
+                    "class=\"btn btn-secondary btn-small\" " +
+
+                    "onclick=\"PanelDetail.render('" +
+                        panel.id +
+                    "')\"" +
+
+                ">" +
+
+                    "<strong>" +
+                        panel.panelName +
+                    "</strong>" +
+
+                    (
+                        panel.panelCode
+                            ? "<div class=\"table-secondary-text\">" +
+                                panel.panelCode +
+                              "</div>"
+                            : ""
+                    ) +
+
+                "</button>" +
 
             "</td>";
 
@@ -1741,7 +1756,7 @@ const Production = {
     },
 
 
-    /*
+    
      * ------------------------------------------------------------
      * REFRESH
      * ------------------------------------------------------------
